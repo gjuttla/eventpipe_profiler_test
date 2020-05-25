@@ -1,0 +1,854 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Diagnostics.Tracing;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Text;
+using System.Threading;
+using Microsoft.Diagnostics.NETCore.Client;
+using Microsoft.Diagnostics.Tracing;
+using Microsoft.Diagnostics.Tracing.Etlx;
+
+namespace EventSourceTest
+{
+    class TestEventSource0: EventSource
+    {
+        public TestEventSource0()
+            : base(EventSourceSettings.EtwSelfDescribingEventFormat)
+        {
+             // Empty constructor body
+        }
+
+
+        [Event(1, Level = (EventLevel)2)]
+        public void TestEvent1(uint[] arg0, short[] arg1, long arg2)
+        {
+            WriteEvent(1, arg0, arg1, arg2);
+        }
+
+        [Event(2, Keywords = (EventKeywords)1231036291)]
+        public void TestEvent2(long arg0, int arg1, int[] arg2, ulong[] arg3)
+        {
+            WriteEvent(2, arg0, arg1, arg2, arg3);
+        }
+
+        [Event(3, Level = (EventLevel)2, Opcode = (EventOpcode)24, Version = 7)]
+        public void TestEvent3(char[] arg0)
+        {
+            WriteEvent(3, arg0);
+        }
+
+        [Event(4, Level = (EventLevel)3, Opcode = (EventOpcode)60)]
+        public void TestEvent4(long[] arg0, float arg1, int[] arg2)
+        {
+            WriteEvent(4, arg0, arg1, arg2);
+        }
+
+        [Event(5, Level = (EventLevel)4, Version = 49)]
+        public void TestEvent5(long[] arg0, uint[] arg1, double arg2, double[] arg3, ulong arg4)
+        {
+            WriteEvent(5, arg0, arg1, arg2, arg3, arg4);
+        }
+
+        [Event(6, Level = (EventLevel)3, Keywords = (EventKeywords)898906234, Opcode = (EventOpcode)111)]
+        public void TestEvent6(float arg0, byte arg1, double[] arg2)
+        {
+            WriteEvent(6, arg0, arg1, arg2);
+        }
+
+        [Event(7, Keywords = (EventKeywords)396241997, Version = 27)]
+        public void TestEvent7(char arg0, int[] arg1)
+        {
+            WriteEvent(7, arg0, arg1);
+        }
+
+        [Event(8, Level = (EventLevel)0, Keywords = (EventKeywords)1837315256)]
+        public void TestEvent8(ulong[] arg0, ulong[] arg1, ushort arg2, double[] arg3, int arg4)
+        {
+            WriteEvent(8, arg0, arg1, arg2, arg3, arg4);
+        }
+
+        [Event(9, Keywords = (EventKeywords)1005016827, Opcode = (EventOpcode)57, Version = 36)]
+        public void TestEvent9(float arg0, byte[] arg1, double arg2)
+        {
+            WriteEvent(9, arg0, arg1, arg2);
+        }
+
+        [Event(10, Level = (EventLevel)4, Keywords = (EventKeywords)219634827, Version = 8)]
+        public void TestEvent10(float arg0)
+        {
+            WriteEvent(10, arg0);
+        }
+
+        [Event(11, Level = (EventLevel)4, Keywords = (EventKeywords)1427395810, Opcode = (EventOpcode)51)]
+        public void TestEvent11(short arg0, short[] arg1, short arg2)
+        {
+            WriteEvent(11, arg0, arg1, arg2);
+        }
+
+        [Event(12, Opcode = (EventOpcode)145, Version = 0)]
+        public void TestEvent12(int arg0, int arg1, ushort arg2, float arg3, float arg4)
+        {
+            WriteEvent(12, arg0, arg1, arg2, arg3, arg4);
+        }
+
+        [Event(13, Level = (EventLevel)3, Version = 33)]
+        public void TestEvent13(float arg0, uint[] arg1)
+        {
+            WriteEvent(13, arg0, arg1);
+        }
+
+        [Event(14, Keywords = (EventKeywords)29737224, Version = 24)]
+        public void TestEvent14()
+        {
+            WriteEvent(14);
+        }
+
+        [Event(15, Level = (EventLevel)2, Version = 9)]
+        public void TestEvent15(double arg0, short arg1, uint[] arg2)
+        {
+            WriteEvent(15, arg0, arg1, arg2);
+        }
+
+        [Event(16, Level = (EventLevel)4, Keywords = (EventKeywords)1978958318)]
+        public void TestEvent16(float[] arg0, char[] arg1, ulong arg2, double arg3)
+        {
+            WriteEvent(16, arg0, arg1, arg2, arg3);
+        }
+
+        [Event(17, Level = (EventLevel)2, Opcode = (EventOpcode)184)]
+        public void TestEvent17(short[] arg0)
+        {
+            WriteEvent(17, arg0);
+        }
+
+        [Event(18, Keywords = (EventKeywords)872351421, Opcode = (EventOpcode)148, Version = 24)]
+        public void TestEvent18(byte[] arg0, ushort[] arg1, char[] arg2, long arg3, float arg4)
+        {
+            WriteEvent(18, arg0, arg1, arg2, arg3, arg4);
+        }
+
+        [Event(19, Level = (EventLevel)0)]
+        public void TestEvent19()
+        {
+            WriteEvent(19);
+        }
+
+        [Event(20, Keywords = (EventKeywords)1870663183, Opcode = (EventOpcode)11)]
+        public void TestEvent20(double arg0, float[] arg1, ulong[] arg2, float arg3)
+        {
+            WriteEvent(20, arg0, arg1, arg2, arg3);
+        }
+
+        [Event(21, Level = (EventLevel)2, Keywords = (EventKeywords)653705120, Opcode = (EventOpcode)90, Version = 25)]
+        public void TestEvent21()
+        {
+            WriteEvent(21);
+        }
+
+        [Event(22, Keywords = (EventKeywords)1244921051, Version = 38)]
+        public void TestEvent22(ushort[] arg0, ushort[] arg1, long arg2, double[] arg3)
+        {
+            WriteEvent(22, arg0, arg1, arg2, arg3);
+        }
+
+        [Event(23, Keywords = (EventKeywords)1659293487, Opcode = (EventOpcode)91)]
+        public void TestEvent23(ushort[] arg0, ushort arg1, float[] arg2, char[] arg3)
+        {
+            WriteEvent(23, arg0, arg1, arg2, arg3);
+        }
+
+        [Event(24, Level = (EventLevel)0, Keywords = (EventKeywords)2012609232)]
+        public void TestEvent24(float[] arg0, long[] arg1, short[] arg2)
+        {
+            WriteEvent(24, arg0, arg1, arg2);
+        }
+
+        [Event(25)]
+        public void TestEvent25()
+        {
+            WriteEvent(25);
+        }
+
+        [Event(26, Level = (EventLevel)0, Keywords = (EventKeywords)1588362066, Opcode = (EventOpcode)91, Version = 7)]
+        public void TestEvent26(ushort[] arg0, int[] arg1)
+        {
+            WriteEvent(26, arg0, arg1);
+        }
+
+        [Event(27, Keywords = (EventKeywords)1004350118)]
+        public void TestEvent27(int[] arg0)
+        {
+            WriteEvent(27, arg0);
+        }
+
+        [Event(28, Level = (EventLevel)2, Version = 1)]
+        public void TestEvent28(ulong arg0)
+        {
+            WriteEvent(28, arg0);
+        }
+    }
+
+    class Program
+    {
+        static int s_successCount = 0;
+
+        static readonly string traceIDValidationMessage = "Expected ID {0} but got ID {1} for EventSource={2} Event={3}";
+        static readonly string traceVersionValidationMessage = "Expected version {0} but got version {1} for EventSource={2} Event={3}";
+        static readonly string traceLevelValidationMessage = "Expected level {0} but got level {1} for EventSource={2} Event={3}";
+        static readonly string traceOpcodeValidationMessage = "Expected opcode {0} but got opcode {1} for EventSource={2} Event={3}";
+        static readonly string tracePayloadValidationMessage = "Expected {0} payload items but got {1} items for EventSource={2} Event={3}";
+        static readonly string tracePayloadNamesValidationMessage = "Expected argument name {0} but got name {1} for EventSource={2} Event={3}";
+        static readonly string tracePayloadTypeValidationMessage = "Expected type {0} but got type {1} for EventSource={2} Event={3} Argument={4}";
+        static readonly string tracePayloadValueValidationMessage = "Expected argument value {0} but got value {1} for EventSource={2} Event={3} Argument={4}";
+
+        public static EventPipeSession AttachEventPipeSessionToSelf(IEnumerable<EventPipeProvider> providers)
+        {
+            int processId = Process.GetCurrentProcess().Id;
+            DiagnosticsClient client = new DiagnosticsClient(processId);
+            return client.StartEventPipeSession(providers, /* requestRunDown */ false);
+        }
+
+        static bool ArraysEqual<T>(T[] lhs, T[] rhs)
+        {
+            if (lhs.Length != rhs.Length)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < lhs.Length; ++i)
+            {
+                if (!lhs[i].Equals(rhs[i]))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        static void WriteEvents()
+        {
+            TestEventSource0 eventSource0 = new TestEventSource0(); 
+            eventSource0.TestEvent1(new uint[] {(uint)2032854139, (uint)1608221689, (uint)1470019200, (uint)199494339, (uint)1238846140, (uint)1366609043}, new short[] {(short)26494, (short)17115, (short)-7229, (short)18850, (short)27931}, 2033417279);
+            eventSource0.TestEvent2(-1001479330, -1397908228, new int[] {1470938110, 172564262, 1133558854, -1572049829}, new ulong[] {(ulong)2055126903, (ulong)593325874, (ulong)2130052527, (ulong)162795177});
+            eventSource0.TestEvent3(new char[] {(char)59299, (char)13231, (char)38541, (char)7407, (char)35812});
+            eventSource0.TestEvent4(new long[] {1517210797, 1583260834, 1617244162, -1109719901}, (float)0.46322205265202654, new int[] {-476570674});
+            eventSource0.TestEvent5(new long[] {-137283580, 26930075}, new uint[] {}, 0.17224937964801182, new double[] {0.6855204453158753}, (ulong)1395718261);
+            eventSource0.TestEvent6((float)0.871076296954917, (byte)78, new double[] {0.9841262297630898});
+            eventSource0.TestEvent7((char)6848, new int[] {});
+            eventSource0.TestEvent8(new ulong[] {(ulong)943700278, (ulong)93671294, (ulong)1518472703, (ulong)965231015, (ulong)772713792, (ulong)1727380921}, new ulong[] {}, (ushort)15791, new double[] {0.05436837768851238, 0.6435145603695487, 0.7707762954620534, 0.73241949534622, 0.001201584935747825}, -459088787);
+            eventSource0.TestEvent9((float)0.4116569722125572, new byte[] {(byte)142, (byte)231, (byte)184}, 0.2969552796785511);
+            eventSource0.TestEvent10((float)0.3685959113615546);
+            eventSource0.TestEvent11((short)-1371, new short[] {}, (short)-10055);
+            eventSource0.TestEvent12(-1341066949, 1986107240, (ushort)7539, (float)0.4445559025949593, (float)0.595563584750315);
+            eventSource0.TestEvent13((float)0.10030000149286353, new uint[] {(uint)655081582, (uint)161288960});
+            eventSource0.TestEvent14();
+            eventSource0.TestEvent15(0.09093603868546711, (short)5906, new uint[] {(uint)1888606391, (uint)294240376});
+            eventSource0.TestEvent16(new float[] {(float)0.7157481926101019, (float)0.06286761959216912, (float)0.3642930194569253, (float)0.6886032059269972, (float)0.7242254133914716, (float)0.7618687198319792}, new char[] {(char)61402, (char)19459, (char)26268, (char)7073}, (ulong)1898172773, 0.2558060587643674);
+            eventSource0.TestEvent17(new short[] {(short)-13330, (short)22622});
+            eventSource0.TestEvent18(new byte[] {}, new ushort[] {(ushort)8373, (ushort)23453, (ushort)12887, (ushort)6280, (ushort)4164}, new char[] {(char)46447, (char)1804, (char)4424, (char)49573, (char)62432}, -1552659050, (float)0.685831931739036);
+            eventSource0.TestEvent19();
+            eventSource0.TestEvent20(0.4264470564324628, new float[] {(float)0.6826871827629801, (float)0.4629493744405682, (float)0.6586208579403445, (float)0.07891686217808949, (float)0.6994707964823911, (float)0.23631616320289492}, new ulong[] {(ulong)410599834}, (float)0.8351299799210997);
+            eventSource0.TestEvent21();
+            eventSource0.TestEvent22(new ushort[] {(ushort)19236, (ushort)37491, (ushort)50069, (ushort)20839}, new ushort[] {(ushort)23453, (ushort)56767, (ushort)17593, (ushort)40962, (ushort)487}, -1282253488, new double[] {0.44816840414338205, 0.3629044566130752, 0.418158809849135});
+            eventSource0.TestEvent23(new ushort[] {(ushort)5231, (ushort)37353, (ushort)2874}, (ushort)58774, new float[] {(float)0.3560803501662241, (float)0.4691461378099146, (float)0.278954748194178}, new char[] {(char)56328, (char)58960, (char)34444});
+            eventSource0.TestEvent24(new float[] {(float)0.19239785484615612}, new long[] {-994124504, 2106722461}, new short[] {(short)23017, (short)20945, (short)-29181});
+            eventSource0.TestEvent25();
+            eventSource0.TestEvent26(new ushort[] {(ushort)61663, (ushort)41258, (ushort)56743, (ushort)51719, (ushort)35286}, new int[] {-1875637359});
+            eventSource0.TestEvent27(new int[] {-862425522, 1372171744, 1450049531, -2065678003});
+            eventSource0.TestEvent28((ulong)792481294);
+
+        }
+
+        static void ValidateEvent(TraceEvent traceEvent)
+        {
+            if (traceEvent.ProviderName == "TestEventSource0")
+            {
+                if (ValidateTestEventSource0(traceEvent))
+                {
+                     ++s_successCount;
+                }
+
+                return;
+            }
+
+        }
+
+        static bool ValidateTestEventSource0(TraceEvent traceEvent)
+        {
+            if (traceEvent.ProviderName == "TestEventSource0")
+            {
+                if (traceEvent.EventName == "TestEvent1")
+                {
+                    // Skipping ID/Version validation because this EventSource is using SelfDescribing events.
+                    if ((int)traceEvent.Level != 2) { Console.WriteLine(traceLevelValidationMessage, 2, (int)traceEvent.Level, "TestEventSource0", "TestEvent1"); return false; }
+                    if ((int)traceEvent.Keywords != 0) { Console.WriteLine($"Expected keywords 0 but got keywords{(int)traceEvent.Keywords} for EventSource=TestEventSource0 Event=TestEvent1"); return false; }
+                    if ((int)traceEvent.Opcode != 0) { Console.WriteLine(traceOpcodeValidationMessage, 0, (int)traceEvent.Opcode, "TestEventSource0", "TestEvent1"); return false; }
+                     ++s_successCount;
+                    if (traceEvent.PayloadNames.Count() != 3) { Console.WriteLine(tracePayloadValidationMessage, 3, traceEvent.PayloadNames.Count(), "TestEventSource0", "TestEvent1"); return false; }
+                    if (traceEvent.PayloadNames[0] != "arg0") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg0", traceEvent.PayloadNames[0], "TestEventSource0", "TestEvent1"); return false; }
+                    if (traceEvent.PayloadValue(0).GetType() != typeof(uint[])) { Console.WriteLine(tracePayloadTypeValidationMessage, "uint[]", traceEvent.PayloadValue(0).GetType(), "TestEventSource0", "TestEvent1", "arg0"); return false; }
+                    if (!ArraysEqual((uint[])traceEvent.PayloadValue(0), new uint[] {(uint)2032854139, (uint)1608221689, (uint)1470019200, (uint)199494339, (uint)1238846140, (uint)1366609043})) { Console.WriteLine(tracePayloadValueValidationMessage, new uint[] {(uint)2032854139, (uint)1608221689, (uint)1470019200, (uint)199494339, (uint)1238846140, (uint)1366609043}, traceEvent.PayloadValue(0), "TestEventSource0", "TestEvent1", "arg0"); return false; }
+                    if (traceEvent.PayloadNames[1] != "arg1") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg1", traceEvent.PayloadNames[1], "TestEventSource0", "TestEvent1"); return false; }
+                    if (traceEvent.PayloadValue(1).GetType() != typeof(short[])) { Console.WriteLine(tracePayloadTypeValidationMessage, "short[]", traceEvent.PayloadValue(1).GetType(), "TestEventSource0", "TestEvent1", "arg1"); return false; }
+                    if (!ArraysEqual((short[])traceEvent.PayloadValue(1), new short[] {(short)26494, (short)17115, (short)-7229, (short)18850, (short)27931})) { Console.WriteLine(tracePayloadValueValidationMessage, new short[] {(short)26494, (short)17115, (short)-7229, (short)18850, (short)27931}, traceEvent.PayloadValue(1), "TestEventSource0", "TestEvent1", "arg1"); return false; }
+                    if (traceEvent.PayloadNames[2] != "arg2") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg2", traceEvent.PayloadNames[2], "TestEventSource0", "TestEvent1"); return false; }
+                    if (traceEvent.PayloadValue(2).GetType() != typeof(long)) { Console.WriteLine(tracePayloadTypeValidationMessage, "long", traceEvent.PayloadValue(2).GetType(), "TestEventSource0", "TestEvent1", "arg2"); return false; }
+                    if ((long)traceEvent.PayloadValue(2) != 2033417279) {  Console.WriteLine(tracePayloadValueValidationMessage, 2033417279, traceEvent.PayloadValue(2), "TestEventSource0", "TestEvent1", "arg2"); return false; }
+
+                    return true;
+                }
+                if (traceEvent.EventName == "TestEvent2")
+                {
+                    // Skipping ID/Version validation because this EventSource is using SelfDescribing events.
+                    if ((int)traceEvent.Level != 4) { Console.WriteLine(traceLevelValidationMessage, 4, (int)traceEvent.Level, "TestEventSource0", "TestEvent2"); return false; }
+                    if ((int)traceEvent.Keywords != 1231036291) { Console.WriteLine($"Expected keywords 1231036291 but got keywords{(int)traceEvent.Keywords} for EventSource=TestEventSource0 Event=TestEvent2"); return false; }
+                    if ((int)traceEvent.Opcode != 0) { Console.WriteLine(traceOpcodeValidationMessage, 0, (int)traceEvent.Opcode, "TestEventSource0", "TestEvent2"); return false; }
+                     ++s_successCount;
+                    if (traceEvent.PayloadNames.Count() != 4) { Console.WriteLine(tracePayloadValidationMessage, 4, traceEvent.PayloadNames.Count(), "TestEventSource0", "TestEvent2"); return false; }
+                    if (traceEvent.PayloadNames[0] != "arg0") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg0", traceEvent.PayloadNames[0], "TestEventSource0", "TestEvent2"); return false; }
+                    if (traceEvent.PayloadValue(0).GetType() != typeof(long)) { Console.WriteLine(tracePayloadTypeValidationMessage, "long", traceEvent.PayloadValue(0).GetType(), "TestEventSource0", "TestEvent2", "arg0"); return false; }
+                    if ((long)traceEvent.PayloadValue(0) != -1001479330) {  Console.WriteLine(tracePayloadValueValidationMessage, -1001479330, traceEvent.PayloadValue(0), "TestEventSource0", "TestEvent2", "arg0"); return false; }
+                    if (traceEvent.PayloadNames[1] != "arg1") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg1", traceEvent.PayloadNames[1], "TestEventSource0", "TestEvent2"); return false; }
+                    if (traceEvent.PayloadValue(1).GetType() != typeof(int)) { Console.WriteLine(tracePayloadTypeValidationMessage, "int", traceEvent.PayloadValue(1).GetType(), "TestEventSource0", "TestEvent2", "arg1"); return false; }
+                    if ((int)traceEvent.PayloadValue(1) != -1397908228) {  Console.WriteLine(tracePayloadValueValidationMessage, -1397908228, traceEvent.PayloadValue(1), "TestEventSource0", "TestEvent2", "arg1"); return false; }
+                    if (traceEvent.PayloadNames[2] != "arg2") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg2", traceEvent.PayloadNames[2], "TestEventSource0", "TestEvent2"); return false; }
+                    if (traceEvent.PayloadValue(2).GetType() != typeof(int[])) { Console.WriteLine(tracePayloadTypeValidationMessage, "int[]", traceEvent.PayloadValue(2).GetType(), "TestEventSource0", "TestEvent2", "arg2"); return false; }
+                    if (!ArraysEqual((int[])traceEvent.PayloadValue(2), new int[] {1470938110, 172564262, 1133558854, -1572049829})) { Console.WriteLine(tracePayloadValueValidationMessage, new int[] {1470938110, 172564262, 1133558854, -1572049829}, traceEvent.PayloadValue(2), "TestEventSource0", "TestEvent2", "arg2"); return false; }
+                    if (traceEvent.PayloadNames[3] != "arg3") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg3", traceEvent.PayloadNames[3], "TestEventSource0", "TestEvent2"); return false; }
+                    if (traceEvent.PayloadValue(3).GetType() != typeof(ulong[])) { Console.WriteLine(tracePayloadTypeValidationMessage, "ulong[]", traceEvent.PayloadValue(3).GetType(), "TestEventSource0", "TestEvent2", "arg3"); return false; }
+                    if (!ArraysEqual((ulong[])traceEvent.PayloadValue(3), new ulong[] {(ulong)2055126903, (ulong)593325874, (ulong)2130052527, (ulong)162795177})) { Console.WriteLine(tracePayloadValueValidationMessage, new ulong[] {(ulong)2055126903, (ulong)593325874, (ulong)2130052527, (ulong)162795177}, traceEvent.PayloadValue(3), "TestEventSource0", "TestEvent2", "arg3"); return false; }
+
+                    return true;
+                }
+                if (traceEvent.EventName == "TestEvent3")
+                {
+                    // Skipping ID/Version validation because this EventSource is using SelfDescribing events.
+                    if ((int)traceEvent.Level != 2) { Console.WriteLine(traceLevelValidationMessage, 2, (int)traceEvent.Level, "TestEventSource0", "TestEvent3"); return false; }
+                    if ((int)traceEvent.Keywords != 0) { Console.WriteLine($"Expected keywords 0 but got keywords{(int)traceEvent.Keywords} for EventSource=TestEventSource0 Event=TestEvent3"); return false; }
+                    if ((int)traceEvent.Opcode != 24) { Console.WriteLine(traceOpcodeValidationMessage, 24, (int)traceEvent.Opcode, "TestEventSource0", "TestEvent3"); return false; }
+                     ++s_successCount;
+                    if (traceEvent.PayloadNames.Count() != 1) { Console.WriteLine(tracePayloadValidationMessage, 1, traceEvent.PayloadNames.Count(), "TestEventSource0", "TestEvent3"); return false; }
+                    if (traceEvent.PayloadNames[0] != "arg0") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg0", traceEvent.PayloadNames[0], "TestEventSource0", "TestEvent3"); return false; }
+                    if (traceEvent.PayloadValue(0).GetType() != typeof(char[])) { Console.WriteLine(tracePayloadTypeValidationMessage, "char[]", traceEvent.PayloadValue(0).GetType(), "TestEventSource0", "TestEvent3", "arg0"); return false; }
+                    if (!ArraysEqual((char[])traceEvent.PayloadValue(0), new char[] {(char)59299, (char)13231, (char)38541, (char)7407, (char)35812})) { Console.WriteLine(tracePayloadValueValidationMessage, new char[] {(char)59299, (char)13231, (char)38541, (char)7407, (char)35812}, traceEvent.PayloadValue(0), "TestEventSource0", "TestEvent3", "arg0"); return false; }
+
+                    return true;
+                }
+                if (traceEvent.EventName == "TestEvent4")
+                {
+                    // Skipping ID/Version validation because this EventSource is using SelfDescribing events.
+                    if ((int)traceEvent.Level != 3) { Console.WriteLine(traceLevelValidationMessage, 3, (int)traceEvent.Level, "TestEventSource0", "TestEvent4"); return false; }
+                    if ((int)traceEvent.Keywords != 0) { Console.WriteLine($"Expected keywords 0 but got keywords{(int)traceEvent.Keywords} for EventSource=TestEventSource0 Event=TestEvent4"); return false; }
+                    if ((int)traceEvent.Opcode != 60) { Console.WriteLine(traceOpcodeValidationMessage, 60, (int)traceEvent.Opcode, "TestEventSource0", "TestEvent4"); return false; }
+                     ++s_successCount;
+                    if (traceEvent.PayloadNames.Count() != 3) { Console.WriteLine(tracePayloadValidationMessage, 3, traceEvent.PayloadNames.Count(), "TestEventSource0", "TestEvent4"); return false; }
+                    if (traceEvent.PayloadNames[0] != "arg0") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg0", traceEvent.PayloadNames[0], "TestEventSource0", "TestEvent4"); return false; }
+                    if (traceEvent.PayloadValue(0).GetType() != typeof(long[])) { Console.WriteLine(tracePayloadTypeValidationMessage, "long[]", traceEvent.PayloadValue(0).GetType(), "TestEventSource0", "TestEvent4", "arg0"); return false; }
+                    if (!ArraysEqual((long[])traceEvent.PayloadValue(0), new long[] {1517210797, 1583260834, 1617244162, -1109719901})) { Console.WriteLine(tracePayloadValueValidationMessage, new long[] {1517210797, 1583260834, 1617244162, -1109719901}, traceEvent.PayloadValue(0), "TestEventSource0", "TestEvent4", "arg0"); return false; }
+                    if (traceEvent.PayloadNames[1] != "arg1") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg1", traceEvent.PayloadNames[1], "TestEventSource0", "TestEvent4"); return false; }
+                    if (traceEvent.PayloadValue(1).GetType() != typeof(float)) { Console.WriteLine(tracePayloadTypeValidationMessage, "float", traceEvent.PayloadValue(1).GetType(), "TestEventSource0", "TestEvent4", "arg1"); return false; }
+                    if ((float)traceEvent.PayloadValue(1) != (float)0.46322205265202654) {  Console.WriteLine(tracePayloadValueValidationMessage, (float)0.46322205265202654, traceEvent.PayloadValue(1), "TestEventSource0", "TestEvent4", "arg1"); return false; }
+                    if (traceEvent.PayloadNames[2] != "arg2") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg2", traceEvent.PayloadNames[2], "TestEventSource0", "TestEvent4"); return false; }
+                    if (traceEvent.PayloadValue(2).GetType() != typeof(int[])) { Console.WriteLine(tracePayloadTypeValidationMessage, "int[]", traceEvent.PayloadValue(2).GetType(), "TestEventSource0", "TestEvent4", "arg2"); return false; }
+                    if (!ArraysEqual((int[])traceEvent.PayloadValue(2), new int[] {-476570674})) { Console.WriteLine(tracePayloadValueValidationMessage, new int[] {-476570674}, traceEvent.PayloadValue(2), "TestEventSource0", "TestEvent4", "arg2"); return false; }
+
+                    return true;
+                }
+                if (traceEvent.EventName == "TestEvent5")
+                {
+                    // Skipping ID/Version validation because this EventSource is using SelfDescribing events.
+                    if ((int)traceEvent.Level != 4) { Console.WriteLine(traceLevelValidationMessage, 4, (int)traceEvent.Level, "TestEventSource0", "TestEvent5"); return false; }
+                    if ((int)traceEvent.Keywords != 0) { Console.WriteLine($"Expected keywords 0 but got keywords{(int)traceEvent.Keywords} for EventSource=TestEventSource0 Event=TestEvent5"); return false; }
+                    if ((int)traceEvent.Opcode != 0) { Console.WriteLine(traceOpcodeValidationMessage, 0, (int)traceEvent.Opcode, "TestEventSource0", "TestEvent5"); return false; }
+                     ++s_successCount;
+                    if (traceEvent.PayloadNames.Count() != 5) { Console.WriteLine(tracePayloadValidationMessage, 5, traceEvent.PayloadNames.Count(), "TestEventSource0", "TestEvent5"); return false; }
+                    if (traceEvent.PayloadNames[0] != "arg0") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg0", traceEvent.PayloadNames[0], "TestEventSource0", "TestEvent5"); return false; }
+                    if (traceEvent.PayloadValue(0).GetType() != typeof(long[])) { Console.WriteLine(tracePayloadTypeValidationMessage, "long[]", traceEvent.PayloadValue(0).GetType(), "TestEventSource0", "TestEvent5", "arg0"); return false; }
+                    if (!ArraysEqual((long[])traceEvent.PayloadValue(0), new long[] {-137283580, 26930075})) { Console.WriteLine(tracePayloadValueValidationMessage, new long[] {-137283580, 26930075}, traceEvent.PayloadValue(0), "TestEventSource0", "TestEvent5", "arg0"); return false; }
+                    if (traceEvent.PayloadNames[1] != "arg1") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg1", traceEvent.PayloadNames[1], "TestEventSource0", "TestEvent5"); return false; }
+                    if (traceEvent.PayloadValue(1).GetType() != typeof(uint[])) { Console.WriteLine(tracePayloadTypeValidationMessage, "uint[]", traceEvent.PayloadValue(1).GetType(), "TestEventSource0", "TestEvent5", "arg1"); return false; }
+                    if (!ArraysEqual((uint[])traceEvent.PayloadValue(1), new uint[] {})) { Console.WriteLine(tracePayloadValueValidationMessage, new uint[] {}, traceEvent.PayloadValue(1), "TestEventSource0", "TestEvent5", "arg1"); return false; }
+                    if (traceEvent.PayloadNames[2] != "arg2") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg2", traceEvent.PayloadNames[2], "TestEventSource0", "TestEvent5"); return false; }
+                    if (traceEvent.PayloadValue(2).GetType() != typeof(double)) { Console.WriteLine(tracePayloadTypeValidationMessage, "double", traceEvent.PayloadValue(2).GetType(), "TestEventSource0", "TestEvent5", "arg2"); return false; }
+                    if ((double)traceEvent.PayloadValue(2) != 0.17224937964801182) {  Console.WriteLine(tracePayloadValueValidationMessage, 0.17224937964801182, traceEvent.PayloadValue(2), "TestEventSource0", "TestEvent5", "arg2"); return false; }
+                    if (traceEvent.PayloadNames[3] != "arg3") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg3", traceEvent.PayloadNames[3], "TestEventSource0", "TestEvent5"); return false; }
+                    if (traceEvent.PayloadValue(3).GetType() != typeof(double[])) { Console.WriteLine(tracePayloadTypeValidationMessage, "double[]", traceEvent.PayloadValue(3).GetType(), "TestEventSource0", "TestEvent5", "arg3"); return false; }
+                    if (!ArraysEqual((double[])traceEvent.PayloadValue(3), new double[] {0.6855204453158753})) { Console.WriteLine(tracePayloadValueValidationMessage, new double[] {0.6855204453158753}, traceEvent.PayloadValue(3), "TestEventSource0", "TestEvent5", "arg3"); return false; }
+                    if (traceEvent.PayloadNames[4] != "arg4") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg4", traceEvent.PayloadNames[4], "TestEventSource0", "TestEvent5"); return false; }
+                    if (traceEvent.PayloadValue(4).GetType() != typeof(ulong)) { Console.WriteLine(tracePayloadTypeValidationMessage, "ulong", traceEvent.PayloadValue(4).GetType(), "TestEventSource0", "TestEvent5", "arg4"); return false; }
+                    if ((ulong)traceEvent.PayloadValue(4) != (ulong)1395718261) {  Console.WriteLine(tracePayloadValueValidationMessage, (ulong)1395718261, traceEvent.PayloadValue(4), "TestEventSource0", "TestEvent5", "arg4"); return false; }
+
+                    return true;
+                }
+                if (traceEvent.EventName == "TestEvent6")
+                {
+                    // Skipping ID/Version validation because this EventSource is using SelfDescribing events.
+                    if ((int)traceEvent.Level != 3) { Console.WriteLine(traceLevelValidationMessage, 3, (int)traceEvent.Level, "TestEventSource0", "TestEvent6"); return false; }
+                    if ((int)traceEvent.Keywords != 898906234) { Console.WriteLine($"Expected keywords 898906234 but got keywords{(int)traceEvent.Keywords} for EventSource=TestEventSource0 Event=TestEvent6"); return false; }
+                    if ((int)traceEvent.Opcode != 111) { Console.WriteLine(traceOpcodeValidationMessage, 111, (int)traceEvent.Opcode, "TestEventSource0", "TestEvent6"); return false; }
+                     ++s_successCount;
+                    if (traceEvent.PayloadNames.Count() != 3) { Console.WriteLine(tracePayloadValidationMessage, 3, traceEvent.PayloadNames.Count(), "TestEventSource0", "TestEvent6"); return false; }
+                    if (traceEvent.PayloadNames[0] != "arg0") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg0", traceEvent.PayloadNames[0], "TestEventSource0", "TestEvent6"); return false; }
+                    if (traceEvent.PayloadValue(0).GetType() != typeof(float)) { Console.WriteLine(tracePayloadTypeValidationMessage, "float", traceEvent.PayloadValue(0).GetType(), "TestEventSource0", "TestEvent6", "arg0"); return false; }
+                    if ((float)traceEvent.PayloadValue(0) != (float)0.871076296954917) {  Console.WriteLine(tracePayloadValueValidationMessage, (float)0.871076296954917, traceEvent.PayloadValue(0), "TestEventSource0", "TestEvent6", "arg0"); return false; }
+                    if (traceEvent.PayloadNames[1] != "arg1") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg1", traceEvent.PayloadNames[1], "TestEventSource0", "TestEvent6"); return false; }
+                    if (traceEvent.PayloadValue(1).GetType() != typeof(byte)) { Console.WriteLine(tracePayloadTypeValidationMessage, "byte", traceEvent.PayloadValue(1).GetType(), "TestEventSource0", "TestEvent6", "arg1"); return false; }
+                    if ((byte)traceEvent.PayloadValue(1) != (byte)78) {  Console.WriteLine(tracePayloadValueValidationMessage, (byte)78, traceEvent.PayloadValue(1), "TestEventSource0", "TestEvent6", "arg1"); return false; }
+                    if (traceEvent.PayloadNames[2] != "arg2") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg2", traceEvent.PayloadNames[2], "TestEventSource0", "TestEvent6"); return false; }
+                    if (traceEvent.PayloadValue(2).GetType() != typeof(double[])) { Console.WriteLine(tracePayloadTypeValidationMessage, "double[]", traceEvent.PayloadValue(2).GetType(), "TestEventSource0", "TestEvent6", "arg2"); return false; }
+                    if (!ArraysEqual((double[])traceEvent.PayloadValue(2), new double[] {0.9841262297630898})) { Console.WriteLine(tracePayloadValueValidationMessage, new double[] {0.9841262297630898}, traceEvent.PayloadValue(2), "TestEventSource0", "TestEvent6", "arg2"); return false; }
+
+                    return true;
+                }
+                if (traceEvent.EventName == "TestEvent7")
+                {
+                    // Skipping ID/Version validation because this EventSource is using SelfDescribing events.
+                    if ((int)traceEvent.Level != 4) { Console.WriteLine(traceLevelValidationMessage, 4, (int)traceEvent.Level, "TestEventSource0", "TestEvent7"); return false; }
+                    if ((int)traceEvent.Keywords != 396241997) { Console.WriteLine($"Expected keywords 396241997 but got keywords{(int)traceEvent.Keywords} for EventSource=TestEventSource0 Event=TestEvent7"); return false; }
+                    if ((int)traceEvent.Opcode != 0) { Console.WriteLine(traceOpcodeValidationMessage, 0, (int)traceEvent.Opcode, "TestEventSource0", "TestEvent7"); return false; }
+                     ++s_successCount;
+                    if (traceEvent.PayloadNames.Count() != 2) { Console.WriteLine(tracePayloadValidationMessage, 2, traceEvent.PayloadNames.Count(), "TestEventSource0", "TestEvent7"); return false; }
+                    if (traceEvent.PayloadNames[0] != "arg0") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg0", traceEvent.PayloadNames[0], "TestEventSource0", "TestEvent7"); return false; }
+                    if (traceEvent.PayloadValue(0).GetType() != typeof(char)) { Console.WriteLine(tracePayloadTypeValidationMessage, "char", traceEvent.PayloadValue(0).GetType(), "TestEventSource0", "TestEvent7", "arg0"); return false; }
+                    if ((char)traceEvent.PayloadValue(0) != (char)6848) {  Console.WriteLine(tracePayloadValueValidationMessage, (char)6848, traceEvent.PayloadValue(0), "TestEventSource0", "TestEvent7", "arg0"); return false; }
+                    if (traceEvent.PayloadNames[1] != "arg1") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg1", traceEvent.PayloadNames[1], "TestEventSource0", "TestEvent7"); return false; }
+                    if (traceEvent.PayloadValue(1).GetType() != typeof(int[])) { Console.WriteLine(tracePayloadTypeValidationMessage, "int[]", traceEvent.PayloadValue(1).GetType(), "TestEventSource0", "TestEvent7", "arg1"); return false; }
+                    if (!ArraysEqual((int[])traceEvent.PayloadValue(1), new int[] {})) { Console.WriteLine(tracePayloadValueValidationMessage, new int[] {}, traceEvent.PayloadValue(1), "TestEventSource0", "TestEvent7", "arg1"); return false; }
+
+                    return true;
+                }
+                if (traceEvent.EventName == "TestEvent8")
+                {
+                    // Skipping ID/Version validation because this EventSource is using SelfDescribing events.
+                    if ((int)traceEvent.Level != 0) { Console.WriteLine(traceLevelValidationMessage, 0, (int)traceEvent.Level, "TestEventSource0", "TestEvent8"); return false; }
+                    if ((int)traceEvent.Keywords != 1837315256) { Console.WriteLine($"Expected keywords 1837315256 but got keywords{(int)traceEvent.Keywords} for EventSource=TestEventSource0 Event=TestEvent8"); return false; }
+                    if ((int)traceEvent.Opcode != 0) { Console.WriteLine(traceOpcodeValidationMessage, 0, (int)traceEvent.Opcode, "TestEventSource0", "TestEvent8"); return false; }
+                     ++s_successCount;
+                    if (traceEvent.PayloadNames.Count() != 5) { Console.WriteLine(tracePayloadValidationMessage, 5, traceEvent.PayloadNames.Count(), "TestEventSource0", "TestEvent8"); return false; }
+                    if (traceEvent.PayloadNames[0] != "arg0") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg0", traceEvent.PayloadNames[0], "TestEventSource0", "TestEvent8"); return false; }
+                    if (traceEvent.PayloadValue(0).GetType() != typeof(ulong[])) { Console.WriteLine(tracePayloadTypeValidationMessage, "ulong[]", traceEvent.PayloadValue(0).GetType(), "TestEventSource0", "TestEvent8", "arg0"); return false; }
+                    if (!ArraysEqual((ulong[])traceEvent.PayloadValue(0), new ulong[] {(ulong)943700278, (ulong)93671294, (ulong)1518472703, (ulong)965231015, (ulong)772713792, (ulong)1727380921})) { Console.WriteLine(tracePayloadValueValidationMessage, new ulong[] {(ulong)943700278, (ulong)93671294, (ulong)1518472703, (ulong)965231015, (ulong)772713792, (ulong)1727380921}, traceEvent.PayloadValue(0), "TestEventSource0", "TestEvent8", "arg0"); return false; }
+                    if (traceEvent.PayloadNames[1] != "arg1") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg1", traceEvent.PayloadNames[1], "TestEventSource0", "TestEvent8"); return false; }
+                    if (traceEvent.PayloadValue(1).GetType() != typeof(ulong[])) { Console.WriteLine(tracePayloadTypeValidationMessage, "ulong[]", traceEvent.PayloadValue(1).GetType(), "TestEventSource0", "TestEvent8", "arg1"); return false; }
+                    if (!ArraysEqual((ulong[])traceEvent.PayloadValue(1), new ulong[] {})) { Console.WriteLine(tracePayloadValueValidationMessage, new ulong[] {}, traceEvent.PayloadValue(1), "TestEventSource0", "TestEvent8", "arg1"); return false; }
+                    if (traceEvent.PayloadNames[2] != "arg2") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg2", traceEvent.PayloadNames[2], "TestEventSource0", "TestEvent8"); return false; }
+                    if (traceEvent.PayloadValue(2).GetType() != typeof(ushort)) { Console.WriteLine(tracePayloadTypeValidationMessage, "ushort", traceEvent.PayloadValue(2).GetType(), "TestEventSource0", "TestEvent8", "arg2"); return false; }
+                    if ((ushort)traceEvent.PayloadValue(2) != (ushort)15791) {  Console.WriteLine(tracePayloadValueValidationMessage, (ushort)15791, traceEvent.PayloadValue(2), "TestEventSource0", "TestEvent8", "arg2"); return false; }
+                    if (traceEvent.PayloadNames[3] != "arg3") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg3", traceEvent.PayloadNames[3], "TestEventSource0", "TestEvent8"); return false; }
+                    if (traceEvent.PayloadValue(3).GetType() != typeof(double[])) { Console.WriteLine(tracePayloadTypeValidationMessage, "double[]", traceEvent.PayloadValue(3).GetType(), "TestEventSource0", "TestEvent8", "arg3"); return false; }
+                    if (!ArraysEqual((double[])traceEvent.PayloadValue(3), new double[] {0.05436837768851238, 0.6435145603695487, 0.7707762954620534, 0.73241949534622, 0.001201584935747825})) { Console.WriteLine(tracePayloadValueValidationMessage, new double[] {0.05436837768851238, 0.6435145603695487, 0.7707762954620534, 0.73241949534622, 0.001201584935747825}, traceEvent.PayloadValue(3), "TestEventSource0", "TestEvent8", "arg3"); return false; }
+                    if (traceEvent.PayloadNames[4] != "arg4") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg4", traceEvent.PayloadNames[4], "TestEventSource0", "TestEvent8"); return false; }
+                    if (traceEvent.PayloadValue(4).GetType() != typeof(int)) { Console.WriteLine(tracePayloadTypeValidationMessage, "int", traceEvent.PayloadValue(4).GetType(), "TestEventSource0", "TestEvent8", "arg4"); return false; }
+                    if ((int)traceEvent.PayloadValue(4) != -459088787) {  Console.WriteLine(tracePayloadValueValidationMessage, -459088787, traceEvent.PayloadValue(4), "TestEventSource0", "TestEvent8", "arg4"); return false; }
+
+                    return true;
+                }
+                if (traceEvent.EventName == "TestEvent9")
+                {
+                    // Skipping ID/Version validation because this EventSource is using SelfDescribing events.
+                    if ((int)traceEvent.Level != 4) { Console.WriteLine(traceLevelValidationMessage, 4, (int)traceEvent.Level, "TestEventSource0", "TestEvent9"); return false; }
+                    if ((int)traceEvent.Keywords != 1005016827) { Console.WriteLine($"Expected keywords 1005016827 but got keywords{(int)traceEvent.Keywords} for EventSource=TestEventSource0 Event=TestEvent9"); return false; }
+                    if ((int)traceEvent.Opcode != 57) { Console.WriteLine(traceOpcodeValidationMessage, 57, (int)traceEvent.Opcode, "TestEventSource0", "TestEvent9"); return false; }
+                     ++s_successCount;
+                    if (traceEvent.PayloadNames.Count() != 3) { Console.WriteLine(tracePayloadValidationMessage, 3, traceEvent.PayloadNames.Count(), "TestEventSource0", "TestEvent9"); return false; }
+                    if (traceEvent.PayloadNames[0] != "arg0") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg0", traceEvent.PayloadNames[0], "TestEventSource0", "TestEvent9"); return false; }
+                    if (traceEvent.PayloadValue(0).GetType() != typeof(float)) { Console.WriteLine(tracePayloadTypeValidationMessage, "float", traceEvent.PayloadValue(0).GetType(), "TestEventSource0", "TestEvent9", "arg0"); return false; }
+                    if ((float)traceEvent.PayloadValue(0) != (float)0.4116569722125572) {  Console.WriteLine(tracePayloadValueValidationMessage, (float)0.4116569722125572, traceEvent.PayloadValue(0), "TestEventSource0", "TestEvent9", "arg0"); return false; }
+                    if (traceEvent.PayloadNames[1] != "arg1") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg1", traceEvent.PayloadNames[1], "TestEventSource0", "TestEvent9"); return false; }
+                    if (traceEvent.PayloadValue(1).GetType() != typeof(byte[])) { Console.WriteLine(tracePayloadTypeValidationMessage, "byte[]", traceEvent.PayloadValue(1).GetType(), "TestEventSource0", "TestEvent9", "arg1"); return false; }
+                    if (!ArraysEqual((byte[])traceEvent.PayloadValue(1), new byte[] {(byte)142, (byte)231, (byte)184})) { Console.WriteLine(tracePayloadValueValidationMessage, new byte[] {(byte)142, (byte)231, (byte)184}, traceEvent.PayloadValue(1), "TestEventSource0", "TestEvent9", "arg1"); return false; }
+                    if (traceEvent.PayloadNames[2] != "arg2") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg2", traceEvent.PayloadNames[2], "TestEventSource0", "TestEvent9"); return false; }
+                    if (traceEvent.PayloadValue(2).GetType() != typeof(double)) { Console.WriteLine(tracePayloadTypeValidationMessage, "double", traceEvent.PayloadValue(2).GetType(), "TestEventSource0", "TestEvent9", "arg2"); return false; }
+                    if ((double)traceEvent.PayloadValue(2) != 0.2969552796785511) {  Console.WriteLine(tracePayloadValueValidationMessage, 0.2969552796785511, traceEvent.PayloadValue(2), "TestEventSource0", "TestEvent9", "arg2"); return false; }
+
+                    return true;
+                }
+                if (traceEvent.EventName == "TestEvent10")
+                {
+                    // Skipping ID/Version validation because this EventSource is using SelfDescribing events.
+                    if ((int)traceEvent.Level != 4) { Console.WriteLine(traceLevelValidationMessage, 4, (int)traceEvent.Level, "TestEventSource0", "TestEvent10"); return false; }
+                    if ((int)traceEvent.Keywords != 219634827) { Console.WriteLine($"Expected keywords 219634827 but got keywords{(int)traceEvent.Keywords} for EventSource=TestEventSource0 Event=TestEvent10"); return false; }
+                    if ((int)traceEvent.Opcode != 0) { Console.WriteLine(traceOpcodeValidationMessage, 0, (int)traceEvent.Opcode, "TestEventSource0", "TestEvent10"); return false; }
+                     ++s_successCount;
+                    if (traceEvent.PayloadNames.Count() != 1) { Console.WriteLine(tracePayloadValidationMessage, 1, traceEvent.PayloadNames.Count(), "TestEventSource0", "TestEvent10"); return false; }
+                    if (traceEvent.PayloadNames[0] != "arg0") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg0", traceEvent.PayloadNames[0], "TestEventSource0", "TestEvent10"); return false; }
+                    if (traceEvent.PayloadValue(0).GetType() != typeof(float)) { Console.WriteLine(tracePayloadTypeValidationMessage, "float", traceEvent.PayloadValue(0).GetType(), "TestEventSource0", "TestEvent10", "arg0"); return false; }
+                    if ((float)traceEvent.PayloadValue(0) != (float)0.3685959113615546) {  Console.WriteLine(tracePayloadValueValidationMessage, (float)0.3685959113615546, traceEvent.PayloadValue(0), "TestEventSource0", "TestEvent10", "arg0"); return false; }
+
+                    return true;
+                }
+                if (traceEvent.EventName == "TestEvent11")
+                {
+                    // Skipping ID/Version validation because this EventSource is using SelfDescribing events.
+                    if ((int)traceEvent.Level != 4) { Console.WriteLine(traceLevelValidationMessage, 4, (int)traceEvent.Level, "TestEventSource0", "TestEvent11"); return false; }
+                    if ((int)traceEvent.Keywords != 1427395810) { Console.WriteLine($"Expected keywords 1427395810 but got keywords{(int)traceEvent.Keywords} for EventSource=TestEventSource0 Event=TestEvent11"); return false; }
+                    if ((int)traceEvent.Opcode != 51) { Console.WriteLine(traceOpcodeValidationMessage, 51, (int)traceEvent.Opcode, "TestEventSource0", "TestEvent11"); return false; }
+                     ++s_successCount;
+                    if (traceEvent.PayloadNames.Count() != 3) { Console.WriteLine(tracePayloadValidationMessage, 3, traceEvent.PayloadNames.Count(), "TestEventSource0", "TestEvent11"); return false; }
+                    if (traceEvent.PayloadNames[0] != "arg0") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg0", traceEvent.PayloadNames[0], "TestEventSource0", "TestEvent11"); return false; }
+                    if (traceEvent.PayloadValue(0).GetType() != typeof(short)) { Console.WriteLine(tracePayloadTypeValidationMessage, "short", traceEvent.PayloadValue(0).GetType(), "TestEventSource0", "TestEvent11", "arg0"); return false; }
+                    if ((short)traceEvent.PayloadValue(0) != (short)-1371) {  Console.WriteLine(tracePayloadValueValidationMessage, (short)-1371, traceEvent.PayloadValue(0), "TestEventSource0", "TestEvent11", "arg0"); return false; }
+                    if (traceEvent.PayloadNames[1] != "arg1") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg1", traceEvent.PayloadNames[1], "TestEventSource0", "TestEvent11"); return false; }
+                    if (traceEvent.PayloadValue(1).GetType() != typeof(short[])) { Console.WriteLine(tracePayloadTypeValidationMessage, "short[]", traceEvent.PayloadValue(1).GetType(), "TestEventSource0", "TestEvent11", "arg1"); return false; }
+                    if (!ArraysEqual((short[])traceEvent.PayloadValue(1), new short[] {})) { Console.WriteLine(tracePayloadValueValidationMessage, new short[] {}, traceEvent.PayloadValue(1), "TestEventSource0", "TestEvent11", "arg1"); return false; }
+                    if (traceEvent.PayloadNames[2] != "arg2") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg2", traceEvent.PayloadNames[2], "TestEventSource0", "TestEvent11"); return false; }
+                    if (traceEvent.PayloadValue(2).GetType() != typeof(short)) { Console.WriteLine(tracePayloadTypeValidationMessage, "short", traceEvent.PayloadValue(2).GetType(), "TestEventSource0", "TestEvent11", "arg2"); return false; }
+                    if ((short)traceEvent.PayloadValue(2) != (short)-10055) {  Console.WriteLine(tracePayloadValueValidationMessage, (short)-10055, traceEvent.PayloadValue(2), "TestEventSource0", "TestEvent11", "arg2"); return false; }
+
+                    return true;
+                }
+                if (traceEvent.EventName == "TestEvent12")
+                {
+                    // Skipping ID/Version validation because this EventSource is using SelfDescribing events.
+                    if ((int)traceEvent.Level != 4) { Console.WriteLine(traceLevelValidationMessage, 4, (int)traceEvent.Level, "TestEventSource0", "TestEvent12"); return false; }
+                    if ((int)traceEvent.Keywords != 0) { Console.WriteLine($"Expected keywords 0 but got keywords{(int)traceEvent.Keywords} for EventSource=TestEventSource0 Event=TestEvent12"); return false; }
+                    if ((int)traceEvent.Opcode != 145) { Console.WriteLine(traceOpcodeValidationMessage, 145, (int)traceEvent.Opcode, "TestEventSource0", "TestEvent12"); return false; }
+                     ++s_successCount;
+                    if (traceEvent.PayloadNames.Count() != 5) { Console.WriteLine(tracePayloadValidationMessage, 5, traceEvent.PayloadNames.Count(), "TestEventSource0", "TestEvent12"); return false; }
+                    if (traceEvent.PayloadNames[0] != "arg0") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg0", traceEvent.PayloadNames[0], "TestEventSource0", "TestEvent12"); return false; }
+                    if (traceEvent.PayloadValue(0).GetType() != typeof(int)) { Console.WriteLine(tracePayloadTypeValidationMessage, "int", traceEvent.PayloadValue(0).GetType(), "TestEventSource0", "TestEvent12", "arg0"); return false; }
+                    if ((int)traceEvent.PayloadValue(0) != -1341066949) {  Console.WriteLine(tracePayloadValueValidationMessage, -1341066949, traceEvent.PayloadValue(0), "TestEventSource0", "TestEvent12", "arg0"); return false; }
+                    if (traceEvent.PayloadNames[1] != "arg1") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg1", traceEvent.PayloadNames[1], "TestEventSource0", "TestEvent12"); return false; }
+                    if (traceEvent.PayloadValue(1).GetType() != typeof(int)) { Console.WriteLine(tracePayloadTypeValidationMessage, "int", traceEvent.PayloadValue(1).GetType(), "TestEventSource0", "TestEvent12", "arg1"); return false; }
+                    if ((int)traceEvent.PayloadValue(1) != 1986107240) {  Console.WriteLine(tracePayloadValueValidationMessage, 1986107240, traceEvent.PayloadValue(1), "TestEventSource0", "TestEvent12", "arg1"); return false; }
+                    if (traceEvent.PayloadNames[2] != "arg2") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg2", traceEvent.PayloadNames[2], "TestEventSource0", "TestEvent12"); return false; }
+                    if (traceEvent.PayloadValue(2).GetType() != typeof(ushort)) { Console.WriteLine(tracePayloadTypeValidationMessage, "ushort", traceEvent.PayloadValue(2).GetType(), "TestEventSource0", "TestEvent12", "arg2"); return false; }
+                    if ((ushort)traceEvent.PayloadValue(2) != (ushort)7539) {  Console.WriteLine(tracePayloadValueValidationMessage, (ushort)7539, traceEvent.PayloadValue(2), "TestEventSource0", "TestEvent12", "arg2"); return false; }
+                    if (traceEvent.PayloadNames[3] != "arg3") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg3", traceEvent.PayloadNames[3], "TestEventSource0", "TestEvent12"); return false; }
+                    if (traceEvent.PayloadValue(3).GetType() != typeof(float)) { Console.WriteLine(tracePayloadTypeValidationMessage, "float", traceEvent.PayloadValue(3).GetType(), "TestEventSource0", "TestEvent12", "arg3"); return false; }
+                    if ((float)traceEvent.PayloadValue(3) != (float)0.4445559025949593) {  Console.WriteLine(tracePayloadValueValidationMessage, (float)0.4445559025949593, traceEvent.PayloadValue(3), "TestEventSource0", "TestEvent12", "arg3"); return false; }
+                    if (traceEvent.PayloadNames[4] != "arg4") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg4", traceEvent.PayloadNames[4], "TestEventSource0", "TestEvent12"); return false; }
+                    if (traceEvent.PayloadValue(4).GetType() != typeof(float)) { Console.WriteLine(tracePayloadTypeValidationMessage, "float", traceEvent.PayloadValue(4).GetType(), "TestEventSource0", "TestEvent12", "arg4"); return false; }
+                    if ((float)traceEvent.PayloadValue(4) != (float)0.595563584750315) {  Console.WriteLine(tracePayloadValueValidationMessage, (float)0.595563584750315, traceEvent.PayloadValue(4), "TestEventSource0", "TestEvent12", "arg4"); return false; }
+
+                    return true;
+                }
+                if (traceEvent.EventName == "TestEvent13")
+                {
+                    // Skipping ID/Version validation because this EventSource is using SelfDescribing events.
+                    if ((int)traceEvent.Level != 3) { Console.WriteLine(traceLevelValidationMessage, 3, (int)traceEvent.Level, "TestEventSource0", "TestEvent13"); return false; }
+                    if ((int)traceEvent.Keywords != 0) { Console.WriteLine($"Expected keywords 0 but got keywords{(int)traceEvent.Keywords} for EventSource=TestEventSource0 Event=TestEvent13"); return false; }
+                    if ((int)traceEvent.Opcode != 0) { Console.WriteLine(traceOpcodeValidationMessage, 0, (int)traceEvent.Opcode, "TestEventSource0", "TestEvent13"); return false; }
+                     ++s_successCount;
+                    if (traceEvent.PayloadNames.Count() != 2) { Console.WriteLine(tracePayloadValidationMessage, 2, traceEvent.PayloadNames.Count(), "TestEventSource0", "TestEvent13"); return false; }
+                    if (traceEvent.PayloadNames[0] != "arg0") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg0", traceEvent.PayloadNames[0], "TestEventSource0", "TestEvent13"); return false; }
+                    if (traceEvent.PayloadValue(0).GetType() != typeof(float)) { Console.WriteLine(tracePayloadTypeValidationMessage, "float", traceEvent.PayloadValue(0).GetType(), "TestEventSource0", "TestEvent13", "arg0"); return false; }
+                    if ((float)traceEvent.PayloadValue(0) != (float)0.10030000149286353) {  Console.WriteLine(tracePayloadValueValidationMessage, (float)0.10030000149286353, traceEvent.PayloadValue(0), "TestEventSource0", "TestEvent13", "arg0"); return false; }
+                    if (traceEvent.PayloadNames[1] != "arg1") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg1", traceEvent.PayloadNames[1], "TestEventSource0", "TestEvent13"); return false; }
+                    if (traceEvent.PayloadValue(1).GetType() != typeof(uint[])) { Console.WriteLine(tracePayloadTypeValidationMessage, "uint[]", traceEvent.PayloadValue(1).GetType(), "TestEventSource0", "TestEvent13", "arg1"); return false; }
+                    if (!ArraysEqual((uint[])traceEvent.PayloadValue(1), new uint[] {(uint)655081582, (uint)161288960})) { Console.WriteLine(tracePayloadValueValidationMessage, new uint[] {(uint)655081582, (uint)161288960}, traceEvent.PayloadValue(1), "TestEventSource0", "TestEvent13", "arg1"); return false; }
+
+                    return true;
+                }
+                if (traceEvent.EventName == "TestEvent14")
+                {
+                    // Skipping ID/Version validation because this EventSource is using SelfDescribing events.
+                    if ((int)traceEvent.Level != 4) { Console.WriteLine(traceLevelValidationMessage, 4, (int)traceEvent.Level, "TestEventSource0", "TestEvent14"); return false; }
+                    if ((int)traceEvent.Keywords != 29737224) { Console.WriteLine($"Expected keywords 29737224 but got keywords{(int)traceEvent.Keywords} for EventSource=TestEventSource0 Event=TestEvent14"); return false; }
+                    if ((int)traceEvent.Opcode != 0) { Console.WriteLine(traceOpcodeValidationMessage, 0, (int)traceEvent.Opcode, "TestEventSource0", "TestEvent14"); return false; }
+                     ++s_successCount;
+                    if (traceEvent.PayloadNames.Count() != 0) { Console.WriteLine(tracePayloadValidationMessage, 0, traceEvent.PayloadNames.Count(), "TestEventSource0", "TestEvent14"); return false; }
+
+                    return true;
+                }
+                if (traceEvent.EventName == "TestEvent15")
+                {
+                    // Skipping ID/Version validation because this EventSource is using SelfDescribing events.
+                    if ((int)traceEvent.Level != 2) { Console.WriteLine(traceLevelValidationMessage, 2, (int)traceEvent.Level, "TestEventSource0", "TestEvent15"); return false; }
+                    if ((int)traceEvent.Keywords != 0) { Console.WriteLine($"Expected keywords 0 but got keywords{(int)traceEvent.Keywords} for EventSource=TestEventSource0 Event=TestEvent15"); return false; }
+                    if ((int)traceEvent.Opcode != 0) { Console.WriteLine(traceOpcodeValidationMessage, 0, (int)traceEvent.Opcode, "TestEventSource0", "TestEvent15"); return false; }
+                     ++s_successCount;
+                    if (traceEvent.PayloadNames.Count() != 3) { Console.WriteLine(tracePayloadValidationMessage, 3, traceEvent.PayloadNames.Count(), "TestEventSource0", "TestEvent15"); return false; }
+                    if (traceEvent.PayloadNames[0] != "arg0") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg0", traceEvent.PayloadNames[0], "TestEventSource0", "TestEvent15"); return false; }
+                    if (traceEvent.PayloadValue(0).GetType() != typeof(double)) { Console.WriteLine(tracePayloadTypeValidationMessage, "double", traceEvent.PayloadValue(0).GetType(), "TestEventSource0", "TestEvent15", "arg0"); return false; }
+                    if ((double)traceEvent.PayloadValue(0) != 0.09093603868546711) {  Console.WriteLine(tracePayloadValueValidationMessage, 0.09093603868546711, traceEvent.PayloadValue(0), "TestEventSource0", "TestEvent15", "arg0"); return false; }
+                    if (traceEvent.PayloadNames[1] != "arg1") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg1", traceEvent.PayloadNames[1], "TestEventSource0", "TestEvent15"); return false; }
+                    if (traceEvent.PayloadValue(1).GetType() != typeof(short)) { Console.WriteLine(tracePayloadTypeValidationMessage, "short", traceEvent.PayloadValue(1).GetType(), "TestEventSource0", "TestEvent15", "arg1"); return false; }
+                    if ((short)traceEvent.PayloadValue(1) != (short)5906) {  Console.WriteLine(tracePayloadValueValidationMessage, (short)5906, traceEvent.PayloadValue(1), "TestEventSource0", "TestEvent15", "arg1"); return false; }
+                    if (traceEvent.PayloadNames[2] != "arg2") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg2", traceEvent.PayloadNames[2], "TestEventSource0", "TestEvent15"); return false; }
+                    if (traceEvent.PayloadValue(2).GetType() != typeof(uint[])) { Console.WriteLine(tracePayloadTypeValidationMessage, "uint[]", traceEvent.PayloadValue(2).GetType(), "TestEventSource0", "TestEvent15", "arg2"); return false; }
+                    if (!ArraysEqual((uint[])traceEvent.PayloadValue(2), new uint[] {(uint)1888606391, (uint)294240376})) { Console.WriteLine(tracePayloadValueValidationMessage, new uint[] {(uint)1888606391, (uint)294240376}, traceEvent.PayloadValue(2), "TestEventSource0", "TestEvent15", "arg2"); return false; }
+
+                    return true;
+                }
+                if (traceEvent.EventName == "TestEvent16")
+                {
+                    // Skipping ID/Version validation because this EventSource is using SelfDescribing events.
+                    if ((int)traceEvent.Level != 4) { Console.WriteLine(traceLevelValidationMessage, 4, (int)traceEvent.Level, "TestEventSource0", "TestEvent16"); return false; }
+                    if ((int)traceEvent.Keywords != 1978958318) { Console.WriteLine($"Expected keywords 1978958318 but got keywords{(int)traceEvent.Keywords} for EventSource=TestEventSource0 Event=TestEvent16"); return false; }
+                    if ((int)traceEvent.Opcode != 0) { Console.WriteLine(traceOpcodeValidationMessage, 0, (int)traceEvent.Opcode, "TestEventSource0", "TestEvent16"); return false; }
+                     ++s_successCount;
+                    if (traceEvent.PayloadNames.Count() != 4) { Console.WriteLine(tracePayloadValidationMessage, 4, traceEvent.PayloadNames.Count(), "TestEventSource0", "TestEvent16"); return false; }
+                    if (traceEvent.PayloadNames[0] != "arg0") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg0", traceEvent.PayloadNames[0], "TestEventSource0", "TestEvent16"); return false; }
+                    if (traceEvent.PayloadValue(0).GetType() != typeof(float[])) { Console.WriteLine(tracePayloadTypeValidationMessage, "float[]", traceEvent.PayloadValue(0).GetType(), "TestEventSource0", "TestEvent16", "arg0"); return false; }
+                    if (!ArraysEqual((float[])traceEvent.PayloadValue(0), new float[] {(float)0.7157481926101019, (float)0.06286761959216912, (float)0.3642930194569253, (float)0.6886032059269972, (float)0.7242254133914716, (float)0.7618687198319792})) { Console.WriteLine(tracePayloadValueValidationMessage, new float[] {(float)0.7157481926101019, (float)0.06286761959216912, (float)0.3642930194569253, (float)0.6886032059269972, (float)0.7242254133914716, (float)0.7618687198319792}, traceEvent.PayloadValue(0), "TestEventSource0", "TestEvent16", "arg0"); return false; }
+                    if (traceEvent.PayloadNames[1] != "arg1") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg1", traceEvent.PayloadNames[1], "TestEventSource0", "TestEvent16"); return false; }
+                    if (traceEvent.PayloadValue(1).GetType() != typeof(char[])) { Console.WriteLine(tracePayloadTypeValidationMessage, "char[]", traceEvent.PayloadValue(1).GetType(), "TestEventSource0", "TestEvent16", "arg1"); return false; }
+                    if (!ArraysEqual((char[])traceEvent.PayloadValue(1), new char[] {(char)61402, (char)19459, (char)26268, (char)7073})) { Console.WriteLine(tracePayloadValueValidationMessage, new char[] {(char)61402, (char)19459, (char)26268, (char)7073}, traceEvent.PayloadValue(1), "TestEventSource0", "TestEvent16", "arg1"); return false; }
+                    if (traceEvent.PayloadNames[2] != "arg2") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg2", traceEvent.PayloadNames[2], "TestEventSource0", "TestEvent16"); return false; }
+                    if (traceEvent.PayloadValue(2).GetType() != typeof(ulong)) { Console.WriteLine(tracePayloadTypeValidationMessage, "ulong", traceEvent.PayloadValue(2).GetType(), "TestEventSource0", "TestEvent16", "arg2"); return false; }
+                    if ((ulong)traceEvent.PayloadValue(2) != (ulong)1898172773) {  Console.WriteLine(tracePayloadValueValidationMessage, (ulong)1898172773, traceEvent.PayloadValue(2), "TestEventSource0", "TestEvent16", "arg2"); return false; }
+                    if (traceEvent.PayloadNames[3] != "arg3") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg3", traceEvent.PayloadNames[3], "TestEventSource0", "TestEvent16"); return false; }
+                    if (traceEvent.PayloadValue(3).GetType() != typeof(double)) { Console.WriteLine(tracePayloadTypeValidationMessage, "double", traceEvent.PayloadValue(3).GetType(), "TestEventSource0", "TestEvent16", "arg3"); return false; }
+                    if ((double)traceEvent.PayloadValue(3) != 0.2558060587643674) {  Console.WriteLine(tracePayloadValueValidationMessage, 0.2558060587643674, traceEvent.PayloadValue(3), "TestEventSource0", "TestEvent16", "arg3"); return false; }
+
+                    return true;
+                }
+                if (traceEvent.EventName == "TestEvent17")
+                {
+                    // Skipping ID/Version validation because this EventSource is using SelfDescribing events.
+                    if ((int)traceEvent.Level != 2) { Console.WriteLine(traceLevelValidationMessage, 2, (int)traceEvent.Level, "TestEventSource0", "TestEvent17"); return false; }
+                    if ((int)traceEvent.Keywords != 0) { Console.WriteLine($"Expected keywords 0 but got keywords{(int)traceEvent.Keywords} for EventSource=TestEventSource0 Event=TestEvent17"); return false; }
+                    if ((int)traceEvent.Opcode != 184) { Console.WriteLine(traceOpcodeValidationMessage, 184, (int)traceEvent.Opcode, "TestEventSource0", "TestEvent17"); return false; }
+                     ++s_successCount;
+                    if (traceEvent.PayloadNames.Count() != 1) { Console.WriteLine(tracePayloadValidationMessage, 1, traceEvent.PayloadNames.Count(), "TestEventSource0", "TestEvent17"); return false; }
+                    if (traceEvent.PayloadNames[0] != "arg0") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg0", traceEvent.PayloadNames[0], "TestEventSource0", "TestEvent17"); return false; }
+                    if (traceEvent.PayloadValue(0).GetType() != typeof(short[])) { Console.WriteLine(tracePayloadTypeValidationMessage, "short[]", traceEvent.PayloadValue(0).GetType(), "TestEventSource0", "TestEvent17", "arg0"); return false; }
+                    if (!ArraysEqual((short[])traceEvent.PayloadValue(0), new short[] {(short)-13330, (short)22622})) { Console.WriteLine(tracePayloadValueValidationMessage, new short[] {(short)-13330, (short)22622}, traceEvent.PayloadValue(0), "TestEventSource0", "TestEvent17", "arg0"); return false; }
+
+                    return true;
+                }
+                if (traceEvent.EventName == "TestEvent18")
+                {
+                    // Skipping ID/Version validation because this EventSource is using SelfDescribing events.
+                    if ((int)traceEvent.Level != 4) { Console.WriteLine(traceLevelValidationMessage, 4, (int)traceEvent.Level, "TestEventSource0", "TestEvent18"); return false; }
+                    if ((int)traceEvent.Keywords != 872351421) { Console.WriteLine($"Expected keywords 872351421 but got keywords{(int)traceEvent.Keywords} for EventSource=TestEventSource0 Event=TestEvent18"); return false; }
+                    if ((int)traceEvent.Opcode != 148) { Console.WriteLine(traceOpcodeValidationMessage, 148, (int)traceEvent.Opcode, "TestEventSource0", "TestEvent18"); return false; }
+                     ++s_successCount;
+                    if (traceEvent.PayloadNames.Count() != 5) { Console.WriteLine(tracePayloadValidationMessage, 5, traceEvent.PayloadNames.Count(), "TestEventSource0", "TestEvent18"); return false; }
+                    if (traceEvent.PayloadNames[0] != "arg0") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg0", traceEvent.PayloadNames[0], "TestEventSource0", "TestEvent18"); return false; }
+                    if (traceEvent.PayloadValue(0).GetType() != typeof(byte[])) { Console.WriteLine(tracePayloadTypeValidationMessage, "byte[]", traceEvent.PayloadValue(0).GetType(), "TestEventSource0", "TestEvent18", "arg0"); return false; }
+                    if (!ArraysEqual((byte[])traceEvent.PayloadValue(0), new byte[] {})) { Console.WriteLine(tracePayloadValueValidationMessage, new byte[] {}, traceEvent.PayloadValue(0), "TestEventSource0", "TestEvent18", "arg0"); return false; }
+                    if (traceEvent.PayloadNames[1] != "arg1") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg1", traceEvent.PayloadNames[1], "TestEventSource0", "TestEvent18"); return false; }
+                    if (traceEvent.PayloadValue(1).GetType() != typeof(ushort[])) { Console.WriteLine(tracePayloadTypeValidationMessage, "ushort[]", traceEvent.PayloadValue(1).GetType(), "TestEventSource0", "TestEvent18", "arg1"); return false; }
+                    if (!ArraysEqual((ushort[])traceEvent.PayloadValue(1), new ushort[] {(ushort)8373, (ushort)23453, (ushort)12887, (ushort)6280, (ushort)4164})) { Console.WriteLine(tracePayloadValueValidationMessage, new ushort[] {(ushort)8373, (ushort)23453, (ushort)12887, (ushort)6280, (ushort)4164}, traceEvent.PayloadValue(1), "TestEventSource0", "TestEvent18", "arg1"); return false; }
+                    if (traceEvent.PayloadNames[2] != "arg2") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg2", traceEvent.PayloadNames[2], "TestEventSource0", "TestEvent18"); return false; }
+                    if (traceEvent.PayloadValue(2).GetType() != typeof(char[])) { Console.WriteLine(tracePayloadTypeValidationMessage, "char[]", traceEvent.PayloadValue(2).GetType(), "TestEventSource0", "TestEvent18", "arg2"); return false; }
+                    if (!ArraysEqual((char[])traceEvent.PayloadValue(2), new char[] {(char)46447, (char)1804, (char)4424, (char)49573, (char)62432})) { Console.WriteLine(tracePayloadValueValidationMessage, new char[] {(char)46447, (char)1804, (char)4424, (char)49573, (char)62432}, traceEvent.PayloadValue(2), "TestEventSource0", "TestEvent18", "arg2"); return false; }
+                    if (traceEvent.PayloadNames[3] != "arg3") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg3", traceEvent.PayloadNames[3], "TestEventSource0", "TestEvent18"); return false; }
+                    if (traceEvent.PayloadValue(3).GetType() != typeof(long)) { Console.WriteLine(tracePayloadTypeValidationMessage, "long", traceEvent.PayloadValue(3).GetType(), "TestEventSource0", "TestEvent18", "arg3"); return false; }
+                    if ((long)traceEvent.PayloadValue(3) != -1552659050) {  Console.WriteLine(tracePayloadValueValidationMessage, -1552659050, traceEvent.PayloadValue(3), "TestEventSource0", "TestEvent18", "arg3"); return false; }
+                    if (traceEvent.PayloadNames[4] != "arg4") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg4", traceEvent.PayloadNames[4], "TestEventSource0", "TestEvent18"); return false; }
+                    if (traceEvent.PayloadValue(4).GetType() != typeof(float)) { Console.WriteLine(tracePayloadTypeValidationMessage, "float", traceEvent.PayloadValue(4).GetType(), "TestEventSource0", "TestEvent18", "arg4"); return false; }
+                    if ((float)traceEvent.PayloadValue(4) != (float)0.685831931739036) {  Console.WriteLine(tracePayloadValueValidationMessage, (float)0.685831931739036, traceEvent.PayloadValue(4), "TestEventSource0", "TestEvent18", "arg4"); return false; }
+
+                    return true;
+                }
+                if (traceEvent.EventName == "TestEvent19")
+                {
+                    // Skipping ID/Version validation because this EventSource is using SelfDescribing events.
+                    if ((int)traceEvent.Level != 0) { Console.WriteLine(traceLevelValidationMessage, 0, (int)traceEvent.Level, "TestEventSource0", "TestEvent19"); return false; }
+                    if ((int)traceEvent.Keywords != 0) { Console.WriteLine($"Expected keywords 0 but got keywords{(int)traceEvent.Keywords} for EventSource=TestEventSource0 Event=TestEvent19"); return false; }
+                    if ((int)traceEvent.Opcode != 0) { Console.WriteLine(traceOpcodeValidationMessage, 0, (int)traceEvent.Opcode, "TestEventSource0", "TestEvent19"); return false; }
+                     ++s_successCount;
+                    if (traceEvent.PayloadNames.Count() != 0) { Console.WriteLine(tracePayloadValidationMessage, 0, traceEvent.PayloadNames.Count(), "TestEventSource0", "TestEvent19"); return false; }
+
+                    return true;
+                }
+                if (traceEvent.EventName == "TestEvent20")
+                {
+                    // Skipping ID/Version validation because this EventSource is using SelfDescribing events.
+                    if ((int)traceEvent.Level != 4) { Console.WriteLine(traceLevelValidationMessage, 4, (int)traceEvent.Level, "TestEventSource0", "TestEvent20"); return false; }
+                    if ((int)traceEvent.Keywords != 1870663183) { Console.WriteLine($"Expected keywords 1870663183 but got keywords{(int)traceEvent.Keywords} for EventSource=TestEventSource0 Event=TestEvent20"); return false; }
+                    if ((int)traceEvent.Opcode != 11) { Console.WriteLine(traceOpcodeValidationMessage, 11, (int)traceEvent.Opcode, "TestEventSource0", "TestEvent20"); return false; }
+                     ++s_successCount;
+                    if (traceEvent.PayloadNames.Count() != 4) { Console.WriteLine(tracePayloadValidationMessage, 4, traceEvent.PayloadNames.Count(), "TestEventSource0", "TestEvent20"); return false; }
+                    if (traceEvent.PayloadNames[0] != "arg0") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg0", traceEvent.PayloadNames[0], "TestEventSource0", "TestEvent20"); return false; }
+                    if (traceEvent.PayloadValue(0).GetType() != typeof(double)) { Console.WriteLine(tracePayloadTypeValidationMessage, "double", traceEvent.PayloadValue(0).GetType(), "TestEventSource0", "TestEvent20", "arg0"); return false; }
+                    if ((double)traceEvent.PayloadValue(0) != 0.4264470564324628) {  Console.WriteLine(tracePayloadValueValidationMessage, 0.4264470564324628, traceEvent.PayloadValue(0), "TestEventSource0", "TestEvent20", "arg0"); return false; }
+                    if (traceEvent.PayloadNames[1] != "arg1") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg1", traceEvent.PayloadNames[1], "TestEventSource0", "TestEvent20"); return false; }
+                    if (traceEvent.PayloadValue(1).GetType() != typeof(float[])) { Console.WriteLine(tracePayloadTypeValidationMessage, "float[]", traceEvent.PayloadValue(1).GetType(), "TestEventSource0", "TestEvent20", "arg1"); return false; }
+                    if (!ArraysEqual((float[])traceEvent.PayloadValue(1), new float[] {(float)0.6826871827629801, (float)0.4629493744405682, (float)0.6586208579403445, (float)0.07891686217808949, (float)0.6994707964823911, (float)0.23631616320289492})) { Console.WriteLine(tracePayloadValueValidationMessage, new float[] {(float)0.6826871827629801, (float)0.4629493744405682, (float)0.6586208579403445, (float)0.07891686217808949, (float)0.6994707964823911, (float)0.23631616320289492}, traceEvent.PayloadValue(1), "TestEventSource0", "TestEvent20", "arg1"); return false; }
+                    if (traceEvent.PayloadNames[2] != "arg2") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg2", traceEvent.PayloadNames[2], "TestEventSource0", "TestEvent20"); return false; }
+                    if (traceEvent.PayloadValue(2).GetType() != typeof(ulong[])) { Console.WriteLine(tracePayloadTypeValidationMessage, "ulong[]", traceEvent.PayloadValue(2).GetType(), "TestEventSource0", "TestEvent20", "arg2"); return false; }
+                    if (!ArraysEqual((ulong[])traceEvent.PayloadValue(2), new ulong[] {(ulong)410599834})) { Console.WriteLine(tracePayloadValueValidationMessage, new ulong[] {(ulong)410599834}, traceEvent.PayloadValue(2), "TestEventSource0", "TestEvent20", "arg2"); return false; }
+                    if (traceEvent.PayloadNames[3] != "arg3") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg3", traceEvent.PayloadNames[3], "TestEventSource0", "TestEvent20"); return false; }
+                    if (traceEvent.PayloadValue(3).GetType() != typeof(float)) { Console.WriteLine(tracePayloadTypeValidationMessage, "float", traceEvent.PayloadValue(3).GetType(), "TestEventSource0", "TestEvent20", "arg3"); return false; }
+                    if ((float)traceEvent.PayloadValue(3) != (float)0.8351299799210997) {  Console.WriteLine(tracePayloadValueValidationMessage, (float)0.8351299799210997, traceEvent.PayloadValue(3), "TestEventSource0", "TestEvent20", "arg3"); return false; }
+
+                    return true;
+                }
+                if (traceEvent.EventName == "TestEvent21")
+                {
+                    // Skipping ID/Version validation because this EventSource is using SelfDescribing events.
+                    if ((int)traceEvent.Level != 2) { Console.WriteLine(traceLevelValidationMessage, 2, (int)traceEvent.Level, "TestEventSource0", "TestEvent21"); return false; }
+                    if ((int)traceEvent.Keywords != 653705120) { Console.WriteLine($"Expected keywords 653705120 but got keywords{(int)traceEvent.Keywords} for EventSource=TestEventSource0 Event=TestEvent21"); return false; }
+                    if ((int)traceEvent.Opcode != 90) { Console.WriteLine(traceOpcodeValidationMessage, 90, (int)traceEvent.Opcode, "TestEventSource0", "TestEvent21"); return false; }
+                     ++s_successCount;
+                    if (traceEvent.PayloadNames.Count() != 0) { Console.WriteLine(tracePayloadValidationMessage, 0, traceEvent.PayloadNames.Count(), "TestEventSource0", "TestEvent21"); return false; }
+
+                    return true;
+                }
+                if (traceEvent.EventName == "TestEvent22")
+                {
+                    // Skipping ID/Version validation because this EventSource is using SelfDescribing events.
+                    if ((int)traceEvent.Level != 4) { Console.WriteLine(traceLevelValidationMessage, 4, (int)traceEvent.Level, "TestEventSource0", "TestEvent22"); return false; }
+                    if ((int)traceEvent.Keywords != 1244921051) { Console.WriteLine($"Expected keywords 1244921051 but got keywords{(int)traceEvent.Keywords} for EventSource=TestEventSource0 Event=TestEvent22"); return false; }
+                    if ((int)traceEvent.Opcode != 0) { Console.WriteLine(traceOpcodeValidationMessage, 0, (int)traceEvent.Opcode, "TestEventSource0", "TestEvent22"); return false; }
+                     ++s_successCount;
+                    if (traceEvent.PayloadNames.Count() != 4) { Console.WriteLine(tracePayloadValidationMessage, 4, traceEvent.PayloadNames.Count(), "TestEventSource0", "TestEvent22"); return false; }
+                    if (traceEvent.PayloadNames[0] != "arg0") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg0", traceEvent.PayloadNames[0], "TestEventSource0", "TestEvent22"); return false; }
+                    if (traceEvent.PayloadValue(0).GetType() != typeof(ushort[])) { Console.WriteLine(tracePayloadTypeValidationMessage, "ushort[]", traceEvent.PayloadValue(0).GetType(), "TestEventSource0", "TestEvent22", "arg0"); return false; }
+                    if (!ArraysEqual((ushort[])traceEvent.PayloadValue(0), new ushort[] {(ushort)19236, (ushort)37491, (ushort)50069, (ushort)20839})) { Console.WriteLine(tracePayloadValueValidationMessage, new ushort[] {(ushort)19236, (ushort)37491, (ushort)50069, (ushort)20839}, traceEvent.PayloadValue(0), "TestEventSource0", "TestEvent22", "arg0"); return false; }
+                    if (traceEvent.PayloadNames[1] != "arg1") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg1", traceEvent.PayloadNames[1], "TestEventSource0", "TestEvent22"); return false; }
+                    if (traceEvent.PayloadValue(1).GetType() != typeof(ushort[])) { Console.WriteLine(tracePayloadTypeValidationMessage, "ushort[]", traceEvent.PayloadValue(1).GetType(), "TestEventSource0", "TestEvent22", "arg1"); return false; }
+                    if (!ArraysEqual((ushort[])traceEvent.PayloadValue(1), new ushort[] {(ushort)23453, (ushort)56767, (ushort)17593, (ushort)40962, (ushort)487})) { Console.WriteLine(tracePayloadValueValidationMessage, new ushort[] {(ushort)23453, (ushort)56767, (ushort)17593, (ushort)40962, (ushort)487}, traceEvent.PayloadValue(1), "TestEventSource0", "TestEvent22", "arg1"); return false; }
+                    if (traceEvent.PayloadNames[2] != "arg2") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg2", traceEvent.PayloadNames[2], "TestEventSource0", "TestEvent22"); return false; }
+                    if (traceEvent.PayloadValue(2).GetType() != typeof(long)) { Console.WriteLine(tracePayloadTypeValidationMessage, "long", traceEvent.PayloadValue(2).GetType(), "TestEventSource0", "TestEvent22", "arg2"); return false; }
+                    if ((long)traceEvent.PayloadValue(2) != -1282253488) {  Console.WriteLine(tracePayloadValueValidationMessage, -1282253488, traceEvent.PayloadValue(2), "TestEventSource0", "TestEvent22", "arg2"); return false; }
+                    if (traceEvent.PayloadNames[3] != "arg3") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg3", traceEvent.PayloadNames[3], "TestEventSource0", "TestEvent22"); return false; }
+                    if (traceEvent.PayloadValue(3).GetType() != typeof(double[])) { Console.WriteLine(tracePayloadTypeValidationMessage, "double[]", traceEvent.PayloadValue(3).GetType(), "TestEventSource0", "TestEvent22", "arg3"); return false; }
+                    if (!ArraysEqual((double[])traceEvent.PayloadValue(3), new double[] {0.44816840414338205, 0.3629044566130752, 0.418158809849135})) { Console.WriteLine(tracePayloadValueValidationMessage, new double[] {0.44816840414338205, 0.3629044566130752, 0.418158809849135}, traceEvent.PayloadValue(3), "TestEventSource0", "TestEvent22", "arg3"); return false; }
+
+                    return true;
+                }
+                if (traceEvent.EventName == "TestEvent23")
+                {
+                    // Skipping ID/Version validation because this EventSource is using SelfDescribing events.
+                    if ((int)traceEvent.Level != 4) { Console.WriteLine(traceLevelValidationMessage, 4, (int)traceEvent.Level, "TestEventSource0", "TestEvent23"); return false; }
+                    if ((int)traceEvent.Keywords != 1659293487) { Console.WriteLine($"Expected keywords 1659293487 but got keywords{(int)traceEvent.Keywords} for EventSource=TestEventSource0 Event=TestEvent23"); return false; }
+                    if ((int)traceEvent.Opcode != 91) { Console.WriteLine(traceOpcodeValidationMessage, 91, (int)traceEvent.Opcode, "TestEventSource0", "TestEvent23"); return false; }
+                     ++s_successCount;
+                    if (traceEvent.PayloadNames.Count() != 4) { Console.WriteLine(tracePayloadValidationMessage, 4, traceEvent.PayloadNames.Count(), "TestEventSource0", "TestEvent23"); return false; }
+                    if (traceEvent.PayloadNames[0] != "arg0") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg0", traceEvent.PayloadNames[0], "TestEventSource0", "TestEvent23"); return false; }
+                    if (traceEvent.PayloadValue(0).GetType() != typeof(ushort[])) { Console.WriteLine(tracePayloadTypeValidationMessage, "ushort[]", traceEvent.PayloadValue(0).GetType(), "TestEventSource0", "TestEvent23", "arg0"); return false; }
+                    if (!ArraysEqual((ushort[])traceEvent.PayloadValue(0), new ushort[] {(ushort)5231, (ushort)37353, (ushort)2874})) { Console.WriteLine(tracePayloadValueValidationMessage, new ushort[] {(ushort)5231, (ushort)37353, (ushort)2874}, traceEvent.PayloadValue(0), "TestEventSource0", "TestEvent23", "arg0"); return false; }
+                    if (traceEvent.PayloadNames[1] != "arg1") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg1", traceEvent.PayloadNames[1], "TestEventSource0", "TestEvent23"); return false; }
+                    if (traceEvent.PayloadValue(1).GetType() != typeof(ushort)) { Console.WriteLine(tracePayloadTypeValidationMessage, "ushort", traceEvent.PayloadValue(1).GetType(), "TestEventSource0", "TestEvent23", "arg1"); return false; }
+                    if ((ushort)traceEvent.PayloadValue(1) != (ushort)58774) {  Console.WriteLine(tracePayloadValueValidationMessage, (ushort)58774, traceEvent.PayloadValue(1), "TestEventSource0", "TestEvent23", "arg1"); return false; }
+                    if (traceEvent.PayloadNames[2] != "arg2") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg2", traceEvent.PayloadNames[2], "TestEventSource0", "TestEvent23"); return false; }
+                    if (traceEvent.PayloadValue(2).GetType() != typeof(float[])) { Console.WriteLine(tracePayloadTypeValidationMessage, "float[]", traceEvent.PayloadValue(2).GetType(), "TestEventSource0", "TestEvent23", "arg2"); return false; }
+                    if (!ArraysEqual((float[])traceEvent.PayloadValue(2), new float[] {(float)0.3560803501662241, (float)0.4691461378099146, (float)0.278954748194178})) { Console.WriteLine(tracePayloadValueValidationMessage, new float[] {(float)0.3560803501662241, (float)0.4691461378099146, (float)0.278954748194178}, traceEvent.PayloadValue(2), "TestEventSource0", "TestEvent23", "arg2"); return false; }
+                    if (traceEvent.PayloadNames[3] != "arg3") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg3", traceEvent.PayloadNames[3], "TestEventSource0", "TestEvent23"); return false; }
+                    if (traceEvent.PayloadValue(3).GetType() != typeof(char[])) { Console.WriteLine(tracePayloadTypeValidationMessage, "char[]", traceEvent.PayloadValue(3).GetType(), "TestEventSource0", "TestEvent23", "arg3"); return false; }
+                    if (!ArraysEqual((char[])traceEvent.PayloadValue(3), new char[] {(char)56328, (char)58960, (char)34444})) { Console.WriteLine(tracePayloadValueValidationMessage, new char[] {(char)56328, (char)58960, (char)34444}, traceEvent.PayloadValue(3), "TestEventSource0", "TestEvent23", "arg3"); return false; }
+
+                    return true;
+                }
+                if (traceEvent.EventName == "TestEvent24")
+                {
+                    // Skipping ID/Version validation because this EventSource is using SelfDescribing events.
+                    if ((int)traceEvent.Level != 0) { Console.WriteLine(traceLevelValidationMessage, 0, (int)traceEvent.Level, "TestEventSource0", "TestEvent24"); return false; }
+                    if ((int)traceEvent.Keywords != 2012609232) { Console.WriteLine($"Expected keywords 2012609232 but got keywords{(int)traceEvent.Keywords} for EventSource=TestEventSource0 Event=TestEvent24"); return false; }
+                    if ((int)traceEvent.Opcode != 0) { Console.WriteLine(traceOpcodeValidationMessage, 0, (int)traceEvent.Opcode, "TestEventSource0", "TestEvent24"); return false; }
+                     ++s_successCount;
+                    if (traceEvent.PayloadNames.Count() != 3) { Console.WriteLine(tracePayloadValidationMessage, 3, traceEvent.PayloadNames.Count(), "TestEventSource0", "TestEvent24"); return false; }
+                    if (traceEvent.PayloadNames[0] != "arg0") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg0", traceEvent.PayloadNames[0], "TestEventSource0", "TestEvent24"); return false; }
+                    if (traceEvent.PayloadValue(0).GetType() != typeof(float[])) { Console.WriteLine(tracePayloadTypeValidationMessage, "float[]", traceEvent.PayloadValue(0).GetType(), "TestEventSource0", "TestEvent24", "arg0"); return false; }
+                    if (!ArraysEqual((float[])traceEvent.PayloadValue(0), new float[] {(float)0.19239785484615612})) { Console.WriteLine(tracePayloadValueValidationMessage, new float[] {(float)0.19239785484615612}, traceEvent.PayloadValue(0), "TestEventSource0", "TestEvent24", "arg0"); return false; }
+                    if (traceEvent.PayloadNames[1] != "arg1") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg1", traceEvent.PayloadNames[1], "TestEventSource0", "TestEvent24"); return false; }
+                    if (traceEvent.PayloadValue(1).GetType() != typeof(long[])) { Console.WriteLine(tracePayloadTypeValidationMessage, "long[]", traceEvent.PayloadValue(1).GetType(), "TestEventSource0", "TestEvent24", "arg1"); return false; }
+                    if (!ArraysEqual((long[])traceEvent.PayloadValue(1), new long[] {-994124504, 2106722461})) { Console.WriteLine(tracePayloadValueValidationMessage, new long[] {-994124504, 2106722461}, traceEvent.PayloadValue(1), "TestEventSource0", "TestEvent24", "arg1"); return false; }
+                    if (traceEvent.PayloadNames[2] != "arg2") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg2", traceEvent.PayloadNames[2], "TestEventSource0", "TestEvent24"); return false; }
+                    if (traceEvent.PayloadValue(2).GetType() != typeof(short[])) { Console.WriteLine(tracePayloadTypeValidationMessage, "short[]", traceEvent.PayloadValue(2).GetType(), "TestEventSource0", "TestEvent24", "arg2"); return false; }
+                    if (!ArraysEqual((short[])traceEvent.PayloadValue(2), new short[] {(short)23017, (short)20945, (short)-29181})) { Console.WriteLine(tracePayloadValueValidationMessage, new short[] {(short)23017, (short)20945, (short)-29181}, traceEvent.PayloadValue(2), "TestEventSource0", "TestEvent24", "arg2"); return false; }
+
+                    return true;
+                }
+                if (traceEvent.EventName == "TestEvent25")
+                {
+                    // Skipping ID/Version validation because this EventSource is using SelfDescribing events.
+                    if ((int)traceEvent.Level != 4) { Console.WriteLine(traceLevelValidationMessage, 4, (int)traceEvent.Level, "TestEventSource0", "TestEvent25"); return false; }
+                    if ((int)traceEvent.Keywords != 0) { Console.WriteLine($"Expected keywords 0 but got keywords{(int)traceEvent.Keywords} for EventSource=TestEventSource0 Event=TestEvent25"); return false; }
+                    if ((int)traceEvent.Opcode != 0) { Console.WriteLine(traceOpcodeValidationMessage, 0, (int)traceEvent.Opcode, "TestEventSource0", "TestEvent25"); return false; }
+                     ++s_successCount;
+                    if (traceEvent.PayloadNames.Count() != 0) { Console.WriteLine(tracePayloadValidationMessage, 0, traceEvent.PayloadNames.Count(), "TestEventSource0", "TestEvent25"); return false; }
+
+                    return true;
+                }
+                if (traceEvent.EventName == "TestEvent26")
+                {
+                    // Skipping ID/Version validation because this EventSource is using SelfDescribing events.
+                    if ((int)traceEvent.Level != 0) { Console.WriteLine(traceLevelValidationMessage, 0, (int)traceEvent.Level, "TestEventSource0", "TestEvent26"); return false; }
+                    if ((int)traceEvent.Keywords != 1588362066) { Console.WriteLine($"Expected keywords 1588362066 but got keywords{(int)traceEvent.Keywords} for EventSource=TestEventSource0 Event=TestEvent26"); return false; }
+                    if ((int)traceEvent.Opcode != 91) { Console.WriteLine(traceOpcodeValidationMessage, 91, (int)traceEvent.Opcode, "TestEventSource0", "TestEvent26"); return false; }
+                     ++s_successCount;
+                    if (traceEvent.PayloadNames.Count() != 2) { Console.WriteLine(tracePayloadValidationMessage, 2, traceEvent.PayloadNames.Count(), "TestEventSource0", "TestEvent26"); return false; }
+                    if (traceEvent.PayloadNames[0] != "arg0") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg0", traceEvent.PayloadNames[0], "TestEventSource0", "TestEvent26"); return false; }
+                    if (traceEvent.PayloadValue(0).GetType() != typeof(ushort[])) { Console.WriteLine(tracePayloadTypeValidationMessage, "ushort[]", traceEvent.PayloadValue(0).GetType(), "TestEventSource0", "TestEvent26", "arg0"); return false; }
+                    if (!ArraysEqual((ushort[])traceEvent.PayloadValue(0), new ushort[] {(ushort)61663, (ushort)41258, (ushort)56743, (ushort)51719, (ushort)35286})) { Console.WriteLine(tracePayloadValueValidationMessage, new ushort[] {(ushort)61663, (ushort)41258, (ushort)56743, (ushort)51719, (ushort)35286}, traceEvent.PayloadValue(0), "TestEventSource0", "TestEvent26", "arg0"); return false; }
+                    if (traceEvent.PayloadNames[1] != "arg1") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg1", traceEvent.PayloadNames[1], "TestEventSource0", "TestEvent26"); return false; }
+                    if (traceEvent.PayloadValue(1).GetType() != typeof(int[])) { Console.WriteLine(tracePayloadTypeValidationMessage, "int[]", traceEvent.PayloadValue(1).GetType(), "TestEventSource0", "TestEvent26", "arg1"); return false; }
+                    if (!ArraysEqual((int[])traceEvent.PayloadValue(1), new int[] {-1875637359})) { Console.WriteLine(tracePayloadValueValidationMessage, new int[] {-1875637359}, traceEvent.PayloadValue(1), "TestEventSource0", "TestEvent26", "arg1"); return false; }
+
+                    return true;
+                }
+                if (traceEvent.EventName == "TestEvent27")
+                {
+                    // Skipping ID/Version validation because this EventSource is using SelfDescribing events.
+                    if ((int)traceEvent.Level != 4) { Console.WriteLine(traceLevelValidationMessage, 4, (int)traceEvent.Level, "TestEventSource0", "TestEvent27"); return false; }
+                    if ((int)traceEvent.Keywords != 1004350118) { Console.WriteLine($"Expected keywords 1004350118 but got keywords{(int)traceEvent.Keywords} for EventSource=TestEventSource0 Event=TestEvent27"); return false; }
+                    if ((int)traceEvent.Opcode != 0) { Console.WriteLine(traceOpcodeValidationMessage, 0, (int)traceEvent.Opcode, "TestEventSource0", "TestEvent27"); return false; }
+                     ++s_successCount;
+                    if (traceEvent.PayloadNames.Count() != 1) { Console.WriteLine(tracePayloadValidationMessage, 1, traceEvent.PayloadNames.Count(), "TestEventSource0", "TestEvent27"); return false; }
+                    if (traceEvent.PayloadNames[0] != "arg0") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg0", traceEvent.PayloadNames[0], "TestEventSource0", "TestEvent27"); return false; }
+                    if (traceEvent.PayloadValue(0).GetType() != typeof(int[])) { Console.WriteLine(tracePayloadTypeValidationMessage, "int[]", traceEvent.PayloadValue(0).GetType(), "TestEventSource0", "TestEvent27", "arg0"); return false; }
+                    if (!ArraysEqual((int[])traceEvent.PayloadValue(0), new int[] {-862425522, 1372171744, 1450049531, -2065678003})) { Console.WriteLine(tracePayloadValueValidationMessage, new int[] {-862425522, 1372171744, 1450049531, -2065678003}, traceEvent.PayloadValue(0), "TestEventSource0", "TestEvent27", "arg0"); return false; }
+
+                    return true;
+                }
+                if (traceEvent.EventName == "TestEvent28")
+                {
+                    // Skipping ID/Version validation because this EventSource is using SelfDescribing events.
+                    if ((int)traceEvent.Level != 2) { Console.WriteLine(traceLevelValidationMessage, 2, (int)traceEvent.Level, "TestEventSource0", "TestEvent28"); return false; }
+                    if ((int)traceEvent.Keywords != 0) { Console.WriteLine($"Expected keywords 0 but got keywords{(int)traceEvent.Keywords} for EventSource=TestEventSource0 Event=TestEvent28"); return false; }
+                    if ((int)traceEvent.Opcode != 0) { Console.WriteLine(traceOpcodeValidationMessage, 0, (int)traceEvent.Opcode, "TestEventSource0", "TestEvent28"); return false; }
+                     ++s_successCount;
+                    if (traceEvent.PayloadNames.Count() != 1) { Console.WriteLine(tracePayloadValidationMessage, 1, traceEvent.PayloadNames.Count(), "TestEventSource0", "TestEvent28"); return false; }
+                    if (traceEvent.PayloadNames[0] != "arg0") { Console.WriteLine(tracePayloadNamesValidationMessage, "arg0", traceEvent.PayloadNames[0], "TestEventSource0", "TestEvent28"); return false; }
+                    if (traceEvent.PayloadValue(0).GetType() != typeof(ulong)) { Console.WriteLine(tracePayloadTypeValidationMessage, "ulong", traceEvent.PayloadValue(0).GetType(), "TestEventSource0", "TestEvent28", "arg0"); return false; }
+                    if ((ulong)traceEvent.PayloadValue(0) != (ulong)792481294) {  Console.WriteLine(tracePayloadValueValidationMessage, (ulong)792481294, traceEvent.PayloadValue(0), "TestEventSource0", "TestEvent28", "arg0"); return false; }
+
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        static void Main(string[] args)
+        {
+            List<EventPipeProvider> providers = new List<EventPipeProvider>
+            {
+                new EventPipeProvider("Microsoft - Windows - DotNETRuntime", EventLevel.Informational, (long)EventKeywords.All),
+                new EventPipeProvider("TestEventSource0", EventLevel.Informational, (long)EventKeywords.All),
+            };
+
+            using (EventPipeSession session = AttachEventPipeSessionToSelf(providers))
+            {
+                WriteEvents();
+                ManualResetEvent allEventsReceivedEvent = new ManualResetEvent(false);
+
+                int eventCount = 0;
+                var source = new EventPipeEventSource(session.EventStream);
+                source.Dynamic.All += (TraceEvent traceEvent) =>
+                {
+                    ++eventCount;
+                    ValidateEvent(traceEvent);
+                };
+
+                Thread processingThread = new Thread(new ThreadStart(() =>
+                {
+                    source.Process();
+                }));
+
+                Console.WriteLine("Starting processing thread");
+                processingThread.Start();
+
+                session.Stop();
+
+                Console.WriteLine("Joining processing thread");
+                processingThread.Join();
+                Console.WriteLine($"Number of events successfully validated={s_successCount}");
+                Console.WriteLine($"Total number of events={eventCount}"); 
+            }
+        }
+    }
+}

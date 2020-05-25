@@ -5,7 +5,6 @@
 #include "corhlpr.h"
 #include "CComPtr.h"
 #include "profiler_pal.h"
-#include "sampler.h"
 #include <string>
 #include <assert.h>
 
@@ -14,12 +13,15 @@ using std::vector;
 using std::mutex;
 using std::lock_guard;
 using std::wstring;
+using std::map;
 
 CorProfiler::CorProfiler() :
-    refCount(0),
-    _failures(),
     _pCorProfilerInfo12(),
-    _session()
+    _session(),
+    _metadataCacheLock(),
+    _metadataCache(),
+    refCount(0),
+    _failures()
 {
 
 }
@@ -59,8 +61,8 @@ HRESULT STDMETHODCALLTYPE CorProfiler::Initialize(IUnknown *pICorProfilerInfoUnk
     //     const WCHAR* filterData;
     // } COR_PRF_EVENTPIPE_PROVIDER_CONFIG;
     COR_PRF_EVENTPIPE_PROVIDER_CONFIG providers[] = {
-        { L"MyEventSource", 0xFFFFFFFFFFFFFFFF, 5, NULL },
-        // { L"Microsoft-Windows-DotNETRuntime", 0xFFFFFFFFFFFFFFFF, 5, NULL }
+        // { L"MyEventSource", 0xFFFFFFFFFFFFFFFF, 5, NULL },
+        { L"TestEventSource0", 0xFFFFFFFFFFFFFFFF, 5, NULL }
     };
 
     // HRESULT EventPipeStartSession(
@@ -84,7 +86,7 @@ HRESULT STDMETHODCALLTYPE CorProfiler::Initialize(IUnknown *pICorProfilerInfoUnk
         return hr;
     }
 
-    printf("Started event pipe session?\n");
+    printf("Started event pipe session!\n");
 
     return S_OK;
 }
@@ -566,6 +568,7 @@ HRESULT STDMETHODCALLTYPE CorProfiler::DynamicMethodUnloaded(FunctionID function
 }
 
 HRESULT STDMETHODCALLTYPE CorProfiler::EventPipeEventDelivered(
+    EVENTPIPE_PROVIDER provider,
     DWORD eventId,
     DWORD eventVersion,
     ULONG cbMetadataBlob,
@@ -576,18 +579,75 @@ HRESULT STDMETHODCALLTYPE CorProfiler::EventPipeEventDelivered(
     ULONG numStackFrames,
     UINT_PTR stackFrames[])
 {
-    printf("Saw EventPipe event\n");
-    printf("    eventId: %d\n", eventId);
-    printf("    eventVersion: %d\n", eventVersion);
-    printf("    cbMetadataBlob: %ld\n", cbMetadataBlob);
-    printf("    metadataBlob: %p\n", metadataBlob);
-    printf("    eventThreadId: %d\n", eventThreadId);
-    printf("    cbEventData: %lu\n", cbEventData);
-    printf("    eventData: %p \n", eventData);
-    printf("    numStackFrames: %lu\n", numStackFrames);
-    printf("    stackFrames %p\n", stackFrames);
+    WCHAR nameBuffer[LONG_LENGTH];
+    ULONG nameCount;
+    HRESULT hr = _pCorProfilerInfo12->EventPipeGetProviderInfo(provider,
+                                                               LONG_LENGTH,
+                                                               &nameCount,
+                                                               nameBuffer);
+    if (FAILED(hr))
+    {
+        printf("EventPipeGetProviderInfo failed with hr=0x%x\n", hr);
+        return E_FAIL;
+    }
+
+    EventPipeMetadataInstance metadata = GetOrAddMetadata(metadataBlob, cbMetadataBlob);
+    EventPipeEventPrinter printer;
+    printer.PrintEvent(nameBuffer,
+                       metadata,
+                       eventThreadId,
+                       eventData,
+                       cbEventData,
+                       stackFrames,
+                       numStackFrames);
+    return S_OK;
+}
+
+HRESULT CorProfiler::EventPipeProviderCreated(EVENTPIPE_PROVIDER provider)
+{
+    WCHAR nameBuffer[LONG_LENGTH];
+    ULONG nameCount;
+    HRESULT hr = _pCorProfilerInfo12->EventPipeGetProviderInfo(provider,
+                                                               LONG_LENGTH,
+                                                               &nameCount,
+                                                               nameBuffer);
+    if (FAILED(hr))
+    {
+        printf("EventPipeGetProviderInfo failed with hr=0x%x\n", hr);
+        return hr;
+    }
+
+    wprintf(L"CorProfiler::EventPipeProviderCreated provider=%s\n", nameBuffer);
+
+    COR_PRF_EVENTPIPE_PROVIDER_CONFIG providerConfig = { nameBuffer, 0xFFFFFFFFFFFFFFFF, 5, NULL };
+    hr = _pCorProfilerInfo12->EventPipeAddProviderToSession(_session, providerConfig);
+    if (FAILED(hr))
+    {
+        printf("EventPipeAddProviderToSession failed with hr=0x%x\n", hr);
+        return hr;
+    }
 
     return S_OK;
+}
+
+EventPipeMetadataInstance CorProfiler::GetOrAddMetadata(LPCBYTE pMetadata, ULONG cbMetadata)
+{
+    // TODO: holding the lock while parsing metdata is not the best plan. Metadata parsing
+    // is kind of slow and could cause perf issues.
+    lock_guard<mutex> guard(_metadataCacheLock);
+
+    auto it = _metadataCache.find(pMetadata);
+    if (it == _metadataCache.end())
+    {
+        EventPipeMetadataReader reader;
+        EventPipeMetadataInstance parsedMetadata = reader.Parse(pMetadata, cbMetadata);
+        _metadataCache.insert({pMetadata, parsedMetadata});
+
+        it = _metadataCache.find(pMetadata);
+        assert(it != _metadataCache.end());
+    }
+
+    return it->second;
 }
 
 wstring CorProfiler::GetFunctionIDName(FunctionID funcId)

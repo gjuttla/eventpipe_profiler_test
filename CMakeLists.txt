@@ -15,6 +15,13 @@ if (WIN32)
 endif(WIN32)
 include_directories($CORECLR_BIN/inc $ENV{CORECLR_PATH}/src/pal/prebuilt/inc)
 
-set(SOURCES ${BASE_SOURCES} src/ClassFactory.cpp src/CorProfiler.cpp src/dllmain.cpp $ENV{CORECLR_PATH}/src/pal/prebuilt/idl/corprof_i.cpp)
+set(SOURCES
+    ${BASE_SOURCES}
+    src/ClassFactory.cpp
+    src/CorProfiler.cpp
+    src/dllmain.cpp
+    src/eventpipemetadatareader.cpp
+    src/eventpipeeventprinter.cpp
+    $ENV{CORECLR_PATH}/src/pal/prebuilt/idl/corprof_i.cpp)
 
 add_library(CorProfiler SHARED ${SOURCES})

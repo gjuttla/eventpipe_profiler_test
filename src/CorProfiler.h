@@ -10,9 +10,11 @@
 #include <vector>
 #include <string>
 #include <condition_variable>
+#include <map>
 #include "cor.h"
 #include "corprof.h"
-#include "sampler.h"
+#include "eventpipemetadatareader.h"
+#include "eventpipeeventprinter.h"
 
 #define SHORT_LENGTH    32
 #define STRING_LENGTH  256
@@ -66,10 +68,12 @@ private:
 class CorProfiler : public ICorProfilerCallback10
 {
 private:
-    std::atomic<int> refCount;
-    std::atomic<int> _failures;
     ICorProfilerInfo12 *_pCorProfilerInfo12;
     EVENTPIPE_SESSION _session;
+    std::mutex _metadataCacheLock;
+    std::map<LPCBYTE, EventPipeMetadataInstance> _metadataCache;
+    std::atomic<int> refCount;
+    std::atomic<int> _failures;
 
 public:
 
@@ -171,6 +175,7 @@ public:
     HRESULT STDMETHODCALLTYPE DynamicMethodUnloaded(FunctionID functionId);
 
     HRESULT STDMETHODCALLTYPE EventPipeEventDelivered(
+        EVENTPIPE_PROVIDER provider,
         DWORD eventId,
         DWORD eventVersion,
         ULONG cbMetadataBlob,
@@ -180,6 +185,8 @@ public:
         LPCBYTE eventData,
         ULONG numStackFrames,
         UINT_PTR stackFrames[]);
+
+    HRESULT EventPipeProviderCreated(EVENTPIPE_PROVIDER provider);
 
     HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid, void **ppvObject) override
     {
@@ -221,6 +228,7 @@ public:
         return count;
     }
 
+    EventPipeMetadataInstance GetOrAddMetadata(LPCBYTE pMetadata, ULONG cbMetadata);
     std::wstring GetFunctionIDName(FunctionID funcId);
     HRESULT FunctionSeen(FunctionID functionID);
 
