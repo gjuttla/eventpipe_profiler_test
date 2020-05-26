@@ -18,9 +18,10 @@ using std::map;
 CorProfiler::CorProfiler() :
     _pCorProfilerInfo12(),
     _session(),
-    _metadataCacheLock(),
+    _providerNameCache(),
+    _cacheLock(),
     _metadataCache(),
-    refCount(0),
+    _refCount(0),
     _failures()
 {
 
@@ -45,34 +46,17 @@ HRESULT STDMETHODCALLTYPE CorProfiler::Initialize(IUnknown *pICorProfilerInfoUnk
         return hr;
     }
 
-    // No event mask, just calling the EventPipe APIs.
-    if (FAILED(hr = _pCorProfilerInfo12->SetEventMask2(COR_PRF_MONITOR_JIT_COMPILATION | COR_PRF_MONITOR_CACHE_SEARCHES, COR_PRF_HIGH_MONITOR_EVENT_PIPE)))
+    if (FAILED(hr = _pCorProfilerInfo12->SetEventMask2(0, COR_PRF_HIGH_MONITOR_EVENT_PIPE)))
     {
         _failures++;
         printf("FAIL: ICorProfilerInfo::SetEventMask2() failed hr=0x%x\n", hr);
         return hr;
     }
 
-    // typedef struct
-    // {
-    //     const WCHAR* providerName;
-    //     UINT64       keywords;
-    //     UINT32       loggingLevel;
-    //     const WCHAR* filterData;
-    // } COR_PRF_EVENTPIPE_PROVIDER_CONFIG;
     COR_PRF_EVENTPIPE_PROVIDER_CONFIG providers[] = {
-        // { L"MyEventSource", 0xFFFFFFFFFFFFFFFF, 5, NULL },
-        { L"TestEventSource0", 0xFFFFFFFFFFFFFFFF, 5, NULL }
+        { L"MyEventSource", 0xFFFFFFFFFFFFFFFF, 5, NULL }
     };
 
-    // HRESULT EventPipeStartSession(
-    //     [in]  const WCHAR*                      szProviderName,
-    //     [in]  UINT32                            cProviderConfigs,
-    //     [in, size_is(cProviderConfigs)]
-    //           COR_PRF_EVENTPIPE_PROVIDER_CONFIG pProviderConfigs[],
-    //     [in]  BOOL                              requestRundown,
-    //     [in]  BOOL                              requestSamples,
-    //     [out] EVENTPIPE_SESSION*                pSession);
     hr = _pCorProfilerInfo12->EventPipeStartSession(L"MyEventPipeSession",
                                                     sizeof(providers) / sizeof(providers[0]),
                                                     providers,
@@ -94,20 +78,6 @@ HRESULT STDMETHODCALLTYPE CorProfiler::Initialize(IUnknown *pICorProfilerInfoUnk
 HRESULT STDMETHODCALLTYPE CorProfiler::Shutdown()
 {
     _pCorProfilerInfo12->EventPipeStopSession(_session);
-
-    printf("CorProfiler::Shutdown\n");
-
-    if(_failures == 0)
-    {
-        printf("PROFILER TEST PASSES\n");
-    }
-    else
-    {
-        // failures were printed earlier when _failures was incremented
-        printf("EventPipe profiler test failed, check log for more info.\n");
-    }
-    fflush(stdout);
-
     return S_OK;
 }
 
@@ -203,7 +173,7 @@ HRESULT STDMETHODCALLTYPE CorProfiler::FunctionUnloadStarted(FunctionID function
 
 HRESULT STDMETHODCALLTYPE CorProfiler::JITCompilationStarted(FunctionID functionId, BOOL fIsSafeToBlock)
 {
-    return FunctionSeen(functionId);
+    return S_OK;
 }
 
 HRESULT STDMETHODCALLTYPE CorProfiler::JITCompilationFinished(FunctionID functionId, HRESULT hrStatus, BOOL fIsSafeToBlock)
@@ -218,11 +188,6 @@ HRESULT STDMETHODCALLTYPE CorProfiler::JITCachedFunctionSearchStarted(FunctionID
 
 HRESULT STDMETHODCALLTYPE CorProfiler::JITCachedFunctionSearchFinished(FunctionID functionId, COR_PRF_JIT_CACHE result)
 {
-    if (result == COR_PRF_CACHED_FUNCTION_FOUND)
-    {
-        return FunctionSeen(functionId);
-    }
-
     return S_OK;
 }
 
@@ -573,31 +538,25 @@ HRESULT STDMETHODCALLTYPE CorProfiler::EventPipeEventDelivered(
     DWORD eventVersion,
     ULONG cbMetadataBlob,
     LPCBYTE metadataBlob,
-    DWORD eventThreadId,
     ULONG cbEventData,
     LPCBYTE eventData,
+    LPCGUID pActivityId,
+    LPCGUID pRelatedActivityId,
+    ThreadID eventThread,
     ULONG numStackFrames,
     UINT_PTR stackFrames[])
 {
-    WCHAR nameBuffer[LONG_LENGTH];
-    ULONG nameCount;
-    HRESULT hr = _pCorProfilerInfo12->EventPipeGetProviderInfo(provider,
-                                                               LONG_LENGTH,
-                                                               &nameCount,
-                                                               nameBuffer);
-    if (FAILED(hr))
-    {
-        printf("EventPipeGetProviderInfo failed with hr=0x%x\n", hr);
-        return E_FAIL;
-    }
+    wstring name = GetOrAddProviderName(provider);
 
     EventPipeMetadataInstance metadata = GetOrAddMetadata(metadataBlob, cbMetadataBlob);
     EventPipeEventPrinter printer;
-    printer.PrintEvent(nameBuffer,
+    printer.PrintEvent(name.c_str(),
                        metadata,
-                       eventThreadId,
                        eventData,
                        cbEventData,
+                       pActivityId,
+                       pRelatedActivityId,
+                       eventThread,
                        stackFrames,
                        numStackFrames);
     return S_OK;
@@ -605,22 +564,11 @@ HRESULT STDMETHODCALLTYPE CorProfiler::EventPipeEventDelivered(
 
 HRESULT CorProfiler::EventPipeProviderCreated(EVENTPIPE_PROVIDER provider)
 {
-    WCHAR nameBuffer[LONG_LENGTH];
-    ULONG nameCount;
-    HRESULT hr = _pCorProfilerInfo12->EventPipeGetProviderInfo(provider,
-                                                               LONG_LENGTH,
-                                                               &nameCount,
-                                                               nameBuffer);
-    if (FAILED(hr))
-    {
-        printf("EventPipeGetProviderInfo failed with hr=0x%x\n", hr);
-        return hr;
-    }
+    wstring name = GetOrAddProviderName(provider);
+    wprintf(L"CorProfiler::EventPipeProviderCreated provider=%s\n", name.c_str());
 
-    wprintf(L"CorProfiler::EventPipeProviderCreated provider=%s\n", nameBuffer);
-
-    COR_PRF_EVENTPIPE_PROVIDER_CONFIG providerConfig = { nameBuffer, 0xFFFFFFFFFFFFFFFF, 5, NULL };
-    hr = _pCorProfilerInfo12->EventPipeAddProviderToSession(_session, providerConfig);
+    COR_PRF_EVENTPIPE_PROVIDER_CONFIG providerConfig = { name.c_str(), 0xFFFFFFFFFFFFFFFF, 5, NULL };
+    HRESULT hr = _pCorProfilerInfo12->EventPipeAddProviderToSession(_session, providerConfig);
     if (FAILED(hr))
     {
         printf("EventPipeAddProviderToSession failed with hr=0x%x\n", hr);
@@ -630,11 +578,39 @@ HRESULT CorProfiler::EventPipeProviderCreated(EVENTPIPE_PROVIDER provider)
     return S_OK;
 }
 
+wstring CorProfiler::GetOrAddProviderName(EVENTPIPE_PROVIDER provider)
+{
+    lock_guard<mutex> guard(_cacheLock);
+
+    auto it = _providerNameCache.find(provider);
+    if (it == _providerNameCache.end())
+    {
+        WCHAR nameBuffer[LONG_LENGTH];
+        ULONG nameCount;
+        HRESULT hr = _pCorProfilerInfo12->EventPipeGetProviderInfo(provider,
+                                                                   LONG_LENGTH,
+                                                                   &nameCount,
+                                                                   nameBuffer);
+        if (FAILED(hr))
+        {
+            printf("EventPipeGetProviderInfo failed with hr=0x%x\n", hr);
+            return L"GetProviderInfo failed";
+        }
+
+        _providerNameCache.insert({provider, wstring(nameBuffer)});
+
+        it = _providerNameCache.find(provider);
+        assert(it != _providerNameCache.end());
+    }
+
+    return it->second;
+}
+
 EventPipeMetadataInstance CorProfiler::GetOrAddMetadata(LPCBYTE pMetadata, ULONG cbMetadata)
 {
     // TODO: holding the lock while parsing metdata is not the best plan. Metadata parsing
     // is kind of slow and could cause perf issues.
-    lock_guard<mutex> guard(_metadataCacheLock);
+    lock_guard<mutex> guard(_cacheLock);
 
     auto it = _metadataCache.find(pMetadata);
     if (it == _metadataCache.end())
@@ -648,89 +624,4 @@ EventPipeMetadataInstance CorProfiler::GetOrAddMetadata(LPCBYTE pMetadata, ULONG
     }
 
     return it->second;
-}
-
-wstring CorProfiler::GetFunctionIDName(FunctionID funcId)
-{
-    // If the FunctionID is 0, we could be dealing with a native function.
-    if (funcId == 0)
-    {
-        return L"Unknown_Native_Function";
-    }
-
-    wstring name;
-
-    ClassID classId = NULL;
-    ModuleID moduleId = NULL;
-    mdToken token = NULL;
-    ULONG32 nTypeArgs = NULL;
-    ClassID typeArgs[SHORT_LENGTH];
-    COR_PRF_FRAME_INFO frameInfo = NULL;
-
-    HRESULT hr = S_OK;
-    hr = _pCorProfilerInfo12->GetFunctionInfo2(funcId,
-                                            frameInfo,
-                                            &classId,
-                                            &moduleId,
-                                            &token,
-                                            SHORT_LENGTH,
-                                            &nTypeArgs,
-                                            typeArgs);
-    if (FAILED(hr))
-    {
-        printf("FAIL: GetFunctionInfo2 call failed with hr=0x%x\n", hr);
-        return L"FuncNameLookupFailed";
-    }
-
-    COMPtrHolder<IMetaDataImport> pIMDImport;
-    hr = _pCorProfilerInfo12->GetModuleMetaData(moduleId,
-                                             ofRead,
-                                             IID_IMetaDataImport,
-                                             (IUnknown **)&pIMDImport);
-    if (FAILED(hr))
-    {
-        printf("FAIL: GetModuleMetaData call failed with hr=0x%x\n", hr);
-        return L"FuncNameLookupFailed";
-    }
-
-    WCHAR funcName[STRING_LENGTH];
-    hr = pIMDImport->GetMethodProps(token,
-                                    NULL,
-                                    funcName,
-                                    STRING_LENGTH,
-                                    0,
-                                    0,
-                                    NULL,
-                                    NULL,
-                                    NULL,
-                                    NULL);
-    if (FAILED(hr))
-    {
-        printf("FAIL: GetMethodProps call failed with hr=0x%x", hr);
-        return L"FuncNameLookupFailed";
-    }
-
-    name += funcName;
-
-    // Fill in the type parameters of the generic method
-    if (nTypeArgs > 0)
-        name += L"<";
-
-    for(ULONG32 i = 0; i < nTypeArgs; i++)
-    {
-        name += L"Generic Type";
-
-        if ((i + 1) != nTypeArgs)
-            name += L", ";
-    }
-
-    if (nTypeArgs > 0)
-        name += L">";
-
-    return name;
-}
-
-HRESULT CorProfiler::FunctionSeen(FunctionID functionID)
-{
-    return S_OK;
 }

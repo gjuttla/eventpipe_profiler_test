@@ -63,11 +63,43 @@ void EventPipeEventPrinter::PrintIndentLevel(ULONG level)
     }
 }
 
-void EventPipeEventPrinter::PrintEvent(LPWSTR providerName,
+// typedef struct _GUID {
+//   unsigned long  Data1;
+//   unsigned short Data2;
+//   unsigned short Data3;
+//   unsigned char  Data4[8];
+// } GUID;
+void EventPipeEventPrinter::PrintGuid(LPCGUID guid)
+{
+    if (guid == NULL)
+    {
+        printf("{NULL Guid}");
+    }
+    else
+    {
+        printf("{%8.8lu-%4.4u-%4.4u-%2.2u%2.2u-%2.2u%2.2u%2.2u%2.2u%2.2u%2.2u}",
+               guid->Data1,
+               guid->Data2,
+               guid->Data3,
+               guid->Data4[0],
+               guid->Data4[1],
+               guid->Data4[2],
+               guid->Data4[3],
+               guid->Data4[4],
+               guid->Data4[5],
+               guid->Data4[6],
+               guid->Data4[7]);
+    }
+}
+
+
+void EventPipeEventPrinter::PrintEvent(LPCWSTR providerName,
                                        EventPipeMetadataInstance metadata,
-                                       DWORD eventThreadId,
                                        LPCBYTE eventData,
                                        ULONG cbEventData,
+                                       LPCGUID pActivityId,
+                                       LPCGUID pRelatedActivityId,
+                                       ThreadID eventThread,
                                        UINT_PTR stackFrames[],
                                        ULONG numStackFrames)
 {
@@ -85,7 +117,15 @@ void EventPipeEventPrinter::PrintEvent(LPWSTR providerName,
     PrintIndentLevel(1);
     printf("eventOpcode: %d\n", metadata.opcode);
     PrintIndentLevel(1);
-    printf("eventThreadId: %d\n", eventThreadId);
+    printf("activityID: ");
+    PrintGuid(pActivityId);
+    printf("\n");
+    PrintIndentLevel(1);
+    printf("relatedActivityID: ");
+    PrintGuid(pActivityId);
+    printf("\n");
+    PrintIndentLevel(1);
+    printf("event ThreadID: %p\n", (void *)eventThread);
     PrintIndentLevel(1);
     printf("numStackFrames: %lu\n", numStackFrames);
     PrintIndentLevel(1);

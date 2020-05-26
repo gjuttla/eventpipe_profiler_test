@@ -10,6 +10,7 @@ class EventPipeEventPrinter
     LPWSTR TypeCodeToString(EventPipeTypeCode typeCode);
 
     void PrintIndentLevel(ULONG level);
+    void PrintGuid(LPCGUID guid);
 
     bool PrintType(EventPipeDataDescriptor type,
                    ULONG indentLevel, // number of tabs to put in
@@ -27,11 +28,13 @@ public:
     EventPipeEventPrinter();
     ~EventPipeEventPrinter() = default;
 
-    void PrintEvent(LPWSTR providerName,
+    void PrintEvent(LPCWSTR providerName,
                     EventPipeMetadataInstance metadata,
-                    DWORD eventThreadId,
                     LPCBYTE eventData,
                     ULONG cbEventData,
+                    LPCGUID pActivityId,
+                    LPCGUID pRelatedActivityId,
+                    ThreadID eventThread,
                     UINT_PTR stackFrames[],
                     ULONG numStackFrames);
 };

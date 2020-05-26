@@ -70,9 +70,10 @@ class CorProfiler : public ICorProfilerCallback10
 private:
     ICorProfilerInfo12 *_pCorProfilerInfo12;
     EVENTPIPE_SESSION _session;
-    std::mutex _metadataCacheLock;
+    std::mutex _cacheLock;
+    std::map<EVENTPIPE_PROVIDER, std::wstring> _providerNameCache;
     std::map<LPCBYTE, EventPipeMetadataInstance> _metadataCache;
-    std::atomic<int> refCount;
+    std::atomic<int> _refCount;
     std::atomic<int> _failures;
 
 public:
@@ -180,13 +181,15 @@ public:
         DWORD eventVersion,
         ULONG cbMetadataBlob,
         LPCBYTE metadataBlob,
-        DWORD eventThreadId,
         ULONG cbEventData,
         LPCBYTE eventData,
+        LPCGUID pActivityId,
+        LPCGUID pRelatedActivityId,
+        ThreadID eventThread,
         ULONG numStackFrames,
         UINT_PTR stackFrames[]);
 
-    HRESULT EventPipeProviderCreated(EVENTPIPE_PROVIDER provider);
+    HRESULT STDMETHODCALLTYPE EventPipeProviderCreated(EVENTPIPE_PROVIDER provider);
 
     HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid, void **ppvObject) override
     {
@@ -213,12 +216,12 @@ public:
 
     ULONG STDMETHODCALLTYPE AddRef(void) override
     {
-        return std::atomic_fetch_add(&this->refCount, 1) + 1;
+        return std::atomic_fetch_add(&_refCount, 1) + 1;
     }
 
     ULONG STDMETHODCALLTYPE Release(void) override
     {
-        int count = std::atomic_fetch_sub(&this->refCount, 1) - 1;
+        int count = std::atomic_fetch_sub(&_refCount, 1) - 1;
 
         if (count <= 0)
         {
@@ -228,16 +231,6 @@ public:
         return count;
     }
 
+    std::wstring GetOrAddProviderName(EVENTPIPE_PROVIDER provider);
     EventPipeMetadataInstance GetOrAddMetadata(LPCBYTE pMetadata, ULONG cbMetadata);
-    std::wstring GetFunctionIDName(FunctionID funcId);
-    HRESULT FunctionSeen(FunctionID functionID);
-
-    template<typename T>
-    static void WriteToBuffer(BYTE *pBuffer, size_t bufferLength, size_t *pOffset, T value)
-    {
-        _ASSERTE(bufferLength >= (*pOffset + sizeof(T)));
-
-        *(T*)(pBuffer + *pOffset) = value;
-        *pOffset += sizeof(T);
-    }
 };

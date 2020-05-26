@@ -6,6 +6,7 @@
 #include <memory>
 #include <assert.h>
 #include "cor.h"
+#include "corprof.h"
 
 enum class EventPipeTypeCode
 {
