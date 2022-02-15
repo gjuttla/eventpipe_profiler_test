@@ -1,45 +1,11 @@
 @echo off
 setlocal
 
-if not defined BuildOS (
-    set BuildOS=Windows
+if not defined BuildConfig (
+    set BuildConfig=Release
 )
 
-if not defined BuildArch (
-    set BuildArch=x64
-)
-
-if not defined BuildType (
-    set BuildType=Debug
-)
-
-if not defined CORECLR_PATH (
-    set CORECLR_PATH=C:/git/runtime/src/coreclr
-)
-
-if not defined CORECLR_BIN (
-    set CORECLR_BIN=C:/git/runtime/artifacts/bin/coreclr/%BuildOS%.%BuildArch%.%BuildType%
-)
-
-set VS_ENT_CMD_PATH="C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\VsDevCmd.bat"
-set VS_COM_CMD_PATH="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\Tools\VsDevCmd.bat"
-
-if not defined VS_CMD_PATH (
-    if exist %VS_ENT_CMD_PATH% (
-        set VS_CMD_PATH=%VS_ENT_CMD_PATH%
-    ) else if exist %VS_COM_CMD_PATH% (
-        set VS_CMD_PATH=%VS_COM_CMD_PATH%
-    ) else (
-        echo No VS developer command prompt detected!
-        goto :EOF
-    )
-)
-
-echo   CORECLR_PATH : %CORECLR_PATH%
-echo   BuildOS      : %BuildOS%
-echo   BuildArch    : %BuildArch%
-echo   BuildType    : %BuildType%
-echo   VS PATH      : %VS_CMD_PATH%
+echo   BuildConfig  : %BuildConfig%
 
 echo   Building
 
@@ -47,22 +13,24 @@ if not exist bin\ (
     mkdir bin
 )
 
-pushd bin
+if not exist bin\x86 (
+    mkdir bin\x86
+)
 
-cmake -G "Visual Studio 16 2019" ..\ -DCMAKE_BUILD_TYPE=Debug
+if not exist bin\x64 (
+    mkdir bin\x64
+)
 
-echo Calling VS Developer Command Prompt to build
-call %VS_CMD_PATH%
-
-msbuild -v:m CorProfiler.sln
-
-popd
+cmake -G "Visual Studio 17 2022" -A Win32 -S . -B "build32"
+cmake -G "Visual Studio 17 2022" -A x64 -S . -B "build64"
+cmake --build build32 --config %BuildConfig%
+cmake --build build64 --config %BuildConfig%
 
 echo.
 echo.
 echo.
 echo Done building
 
-echo Copying binary to main directory
-copy /y  bin\Debug\CorProfiler.dll .
-
+echo Copying binaries to bin
+copy /y  build32\%BuildConfig%\CorProfiler.dll bin\x86
+copy /y  build64\%BuildConfig%\CorProfiler.dll bin\x64

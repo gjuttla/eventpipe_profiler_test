@@ -16,68 +16,44 @@ using std::wstring;
 using std::map;
 
 CorProfiler::CorProfiler() :
-    _pCorProfilerInfo12(),
-    _session(),
-    _providerNameCache(),
-    _cacheLock(),
-    _metadataCache(),
     _refCount(0),
-    _failures()
+    _failures(),
+    _pCorProfilerInfo()
 {
 
 }
 
 CorProfiler::~CorProfiler()
 {
-    if (this->_pCorProfilerInfo12 != nullptr)
+    if (this->_pCorProfilerInfo != nullptr)
     {
-        this->_pCorProfilerInfo12->Release();
-        this->_pCorProfilerInfo12 = nullptr;
+        this->_pCorProfilerInfo->Release();
+        this->_pCorProfilerInfo = nullptr;
     }
 }
 
 HRESULT STDMETHODCALLTYPE CorProfiler::Initialize(IUnknown *pICorProfilerInfoUnk)
 {
     HRESULT hr = S_OK;
-    if (FAILED(hr = pICorProfilerInfoUnk->QueryInterface(__uuidof(ICorProfilerInfo12), (void **)&_pCorProfilerInfo12)))
+    if (FAILED(hr = pICorProfilerInfoUnk->QueryInterface(__uuidof(ICorProfilerInfo), (void **)&_pCorProfilerInfo)))
     {
-        printf("FAIL: failed to QI for ICorProfilerInfo12.\n");
+        printf("FAIL: failed to QI for ICorProfilerInfo.\n");
         _failures++;
         return hr;
     }
 
-    if (FAILED(hr = _pCorProfilerInfo12->SetEventMask2(0, COR_PRF_HIGH_MONITOR_EVENT_PIPE)))
+    if (FAILED(hr = _pCorProfilerInfo->SetEventMask(COR_PRF_MONITOR_REMOTING)))
     {
         _failures++;
-        printf("FAIL: ICorProfilerInfo::SetEventMask2() failed hr=0x%x\n", hr);
+        printf("FAIL: ICorProfilerInfo::SetEventMask() failed hr=0x%x\n", hr);
         return hr;
     }
-
-    COR_PRF_EVENTPIPE_PROVIDER_CONFIG providers[] = {
-        { L"MyEventSource", 0xFFFFFFFFFFFFFFFF, 5, NULL }
-    };
-
-    hr = _pCorProfilerInfo12->EventPipeStartSession(L"MyEventPipeSession",
-                                                    sizeof(providers) / sizeof(providers[0]),
-                                                    providers,
-                                                    false,
-                                                    false,
-                                                    &_session);
-    if (FAILED(hr))
-    {
-        printf("Failed to start event pipe session with hr=0x%x\n", hr);
-        _failures++;
-        return hr;
-    }
-
-    printf("Started event pipe session!\n");
 
     return S_OK;
 }
 
 HRESULT STDMETHODCALLTYPE CorProfiler::Shutdown()
 {
-    _pCorProfilerInfo12->EventPipeStopSession(_session);
     return S_OK;
 }
 
@@ -218,41 +194,65 @@ HRESULT STDMETHODCALLTYPE CorProfiler::ThreadAssignedToOSThread(ThreadID managed
 
 HRESULT STDMETHODCALLTYPE CorProfiler::RemotingClientInvocationStarted()
 {
+#ifdef PRINT_REMOTING_CALLBACKS
+	printf("RemotingClientInvocationStarted\n");
+#endif
     return S_OK;
 }
 
 HRESULT STDMETHODCALLTYPE CorProfiler::RemotingClientSendingMessage(GUID *pCookie, BOOL fIsAsync)
 {
+#ifdef PRINT_REMOTING_CALLBACKS
+	printf("RemotingClientSendingMessage\n");
+#endif
     return S_OK;
 }
 
 HRESULT STDMETHODCALLTYPE CorProfiler::RemotingClientReceivingReply(GUID *pCookie, BOOL fIsAsync)
 {
+#ifdef PRINT_REMOTING_CALLBACKS
+	printf("RemotingClientReceivingReply\n");
+#endif
     return S_OK;
 }
 
 HRESULT STDMETHODCALLTYPE CorProfiler::RemotingClientInvocationFinished()
 {
+#ifdef PRINT_REMOTING_CALLBACKS
+	printf("RemotingClientInvocationFinished\n");
+#endif
     return S_OK;
 }
 
 HRESULT STDMETHODCALLTYPE CorProfiler::RemotingServerReceivingMessage(GUID *pCookie, BOOL fIsAsync)
 {
+#ifdef PRINT_REMOTING_CALLBACKS
+	printf("RemotingServerReceivingMessage\n");
+#endif
     return S_OK;
 }
 
 HRESULT STDMETHODCALLTYPE CorProfiler::RemotingServerInvocationStarted()
 {
+#ifdef PRINT_REMOTING_CALLBACKS
+	printf("RemotingServerInvocationStarted\n");
+#endif
     return S_OK;
 }
 
 HRESULT STDMETHODCALLTYPE CorProfiler::RemotingServerInvocationReturned()
 {
+#ifdef PRINT_REMOTING_CALLBACKS
+	printf("RemotingServerInvocationReturned\n");
+#endif
     return S_OK;
 }
 
 HRESULT STDMETHODCALLTYPE CorProfiler::RemotingServerSendingReply(GUID *pCookie, BOOL fIsAsync)
 {
+#ifdef PRINT_REMOTING_CALLBACKS
+	printf("RemotingServerSendingReply\n");
+#endif
     return S_OK;
 }
 
@@ -456,7 +456,7 @@ HRESULT STDMETHODCALLTYPE CorProfiler::HandleDestroyed(GCHandleID handleId)
     return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CorProfiler::InitializeForAttach(IUnknown *_pCorProfilerInfo12Unk, void *pvClientData, UINT cbClientData)
+HRESULT STDMETHODCALLTYPE CorProfiler::InitializeForAttach(IUnknown *_pCorProfilerInfoUnk, void *pvClientData, UINT cbClientData)
 {
     return S_OK;
 }
@@ -508,7 +508,6 @@ HRESULT STDMETHODCALLTYPE CorProfiler::ConditionalWeakTableElementReferences(ULO
 
 HRESULT STDMETHODCALLTYPE CorProfiler::GetAssemblyReferences(const WCHAR *wszAssemblyPath, ICorProfilerAssemblyReferenceProvider *pAsmRefProvider)
 {
-    printf("GetAssemblyReferences\n");
     return S_OK;
 }
 
@@ -546,82 +545,10 @@ HRESULT STDMETHODCALLTYPE CorProfiler::EventPipeEventDelivered(
     ULONG numStackFrames,
     UINT_PTR stackFrames[])
 {
-    wstring name = GetOrAddProviderName(provider);
-
-    EventPipeMetadataInstance metadata = GetOrAddMetadata(metadataBlob, cbMetadataBlob);
-    EventPipeEventPrinter printer;
-    printer.PrintEvent(name.c_str(),
-                       metadata,
-                       eventData,
-                       cbEventData,
-                       pActivityId,
-                       pRelatedActivityId,
-                       eventThread,
-                       stackFrames,
-                       numStackFrames);
     return S_OK;
 }
 
 HRESULT CorProfiler::EventPipeProviderCreated(EVENTPIPE_PROVIDER provider)
 {
-    wstring name = GetOrAddProviderName(provider);
-    wprintf(L"CorProfiler::EventPipeProviderCreated provider=%s\n", name.c_str());
-
-    COR_PRF_EVENTPIPE_PROVIDER_CONFIG providerConfig = { name.c_str(), 0xFFFFFFFFFFFFFFFF, 5, NULL };
-    HRESULT hr = _pCorProfilerInfo12->EventPipeAddProviderToSession(_session, providerConfig);
-    if (FAILED(hr))
-    {
-        printf("EventPipeAddProviderToSession failed with hr=0x%x\n", hr);
-        return hr;
-    }
-
     return S_OK;
-}
-
-wstring CorProfiler::GetOrAddProviderName(EVENTPIPE_PROVIDER provider)
-{
-    lock_guard<mutex> guard(_cacheLock);
-
-    auto it = _providerNameCache.find(provider);
-    if (it == _providerNameCache.end())
-    {
-        WCHAR nameBuffer[LONG_LENGTH];
-        ULONG nameCount;
-        HRESULT hr = _pCorProfilerInfo12->EventPipeGetProviderInfo(provider,
-                                                                   LONG_LENGTH,
-                                                                   &nameCount,
-                                                                   nameBuffer);
-        if (FAILED(hr))
-        {
-            printf("EventPipeGetProviderInfo failed with hr=0x%x\n", hr);
-            return L"GetProviderInfo failed";
-        }
-
-        _providerNameCache.insert({provider, wstring(nameBuffer)});
-
-        it = _providerNameCache.find(provider);
-        assert(it != _providerNameCache.end());
-    }
-
-    return it->second;
-}
-
-EventPipeMetadataInstance CorProfiler::GetOrAddMetadata(LPCBYTE pMetadata, ULONG cbMetadata)
-{
-    // TODO: holding the lock while parsing metdata is not the best plan. Metadata parsing
-    // is kind of slow and could cause perf issues.
-    lock_guard<mutex> guard(_cacheLock);
-
-    auto it = _metadataCache.find(pMetadata);
-    if (it == _metadataCache.end())
-    {
-        EventPipeMetadataReader reader;
-        EventPipeMetadataInstance parsedMetadata = reader.Parse(pMetadata, cbMetadata);
-        _metadataCache.insert({pMetadata, parsedMetadata});
-
-        it = _metadataCache.find(pMetadata);
-        assert(it != _metadataCache.end());
-    }
-
-    return it->second;
 }

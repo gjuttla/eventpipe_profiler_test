@@ -6,9 +6,14 @@ if exist bin\ (
     rmdir /s /q bin\
 )
 
-echo Deleting CorProfiler.dll
-if exist CorProfiler.dll (
-    del CorProfiler.dll
+echo Deleting build32\
+if exist build32\ (
+    rmdir /s /q build32\
+)
+
+echo Deleting build64\
+if exist build64\ (
+    rmdir /s /q build64\
 )
 
 echo Done!

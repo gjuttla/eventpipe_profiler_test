@@ -13,8 +13,6 @@
 #include <map>
 #include "cor.h"
 #include "corprof.h"
-#include "eventpipemetadatareader.h"
-#include "eventpipeeventprinter.h"
 
 #define SHORT_LENGTH    32
 #define STRING_LENGTH  256
@@ -68,11 +66,7 @@ private:
 class CorProfiler : public ICorProfilerCallback10
 {
 private:
-    ICorProfilerInfo12 *_pCorProfilerInfo12;
-    EVENTPIPE_SESSION _session;
-    std::mutex _cacheLock;
-    std::map<EVENTPIPE_PROVIDER, std::wstring> _providerNameCache;
-    std::map<LPCBYTE, EventPipeMetadataInstance> _metadataCache;
+    ICorProfilerInfo *_pCorProfilerInfo;
     std::atomic<int> _refCount;
     std::atomic<int> _failures;
 
@@ -231,6 +225,4 @@ public:
         return count;
     }
 
-    std::wstring GetOrAddProviderName(EVENTPIPE_PROVIDER provider);
-    EventPipeMetadataInstance GetOrAddMetadata(LPCBYTE pMetadata, ULONG cbMetadata);
 };
